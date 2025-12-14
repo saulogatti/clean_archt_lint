@@ -1,0 +1,3 @@
+dartdoc:
+  showUndocumentedCategories: true
+  includeExternal: ['src/rules/core_no_data_or_presentation.dart']

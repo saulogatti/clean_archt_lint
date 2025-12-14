@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="clean_archt_lint API docs, for the Dart programming language.">
+  <title>clean_archt_lint - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">clean_archt_lint package</li>
+  </ol>
+  <div class="self-name">clean_archt_lint</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="clean_arch_lint">clean_arch_lint</h1>
+<p>Lint customizado para <strong>Flutter Clean Architecture</strong>, focado em <strong>enforce de camadas</strong> usando análise estática (AST) com <code>custom_lint</code>.</p>
+<p>Este package atua como um <strong>guardião da arquitetura</strong>: se uma camada depender de quem não deve, o erro aparece na hora.</p>
+<hr>
+<h2 id="-objetivo">🎯 Objetivo</h2>
+<p>Garantir que a estrutura abaixo seja respeitada automaticamente:</p>
+<pre class="language-dart"><code>lib/
+ ├─ core/
+ ├─ data/
+ └─ presentation/
+</code></pre>
+<p>Sem discussão em PR. Sem “foi sem querer”. O lint resolve.</p>
+<hr>
+<h2 id="-conceito-das-camadas">🧱 Conceito das camadas</h2>
+<h3 id="core">core</h3>
+<p>Camada pura, sem Flutter e sem infraestrutura.</p>
+<p>Contém:</p>
+<ul>
+<li>entidades</li>
+<li>usecases</li>
+<li>contratos (interfaces)</li>
+<li>regras de negócio</li>
+</ul>
+<h3 id="data">data</h3>
+<p>Implementações técnicas.</p>
+<p>Contém:</p>
+<ul>
+<li>datasources</li>
+<li>models / DTOs</li>
+<li>mappers</li>
+<li>implementações de repositórios (<code>Impl</code>)</li>
+</ul>
+<h3 id="presentation">presentation</h3>
+<p>Interface do usuário.</p>
+<p>Contém:</p>
+<ul>
+<li>widgets</li>
+<li>pages</li>
+<li>bloc / cubit</li>
+<li>viewmodels / controllers</li>
+</ul>
+<hr>
+<h2 id="-regras-de-lint">🚨 Regras de lint</h2>
+<h3 id="1-core_no_flutter-error">1️⃣ core_no_flutter (ERROR)</h3>
+<p>❌ Proíbe imports de Flutter no <code>core</code>.</p>
+<p>Bloqueia:</p>
+<ul>
+<li><code>package:flutter/*</code></li>
+<li><code>dart:ui</code></li>
+<li><code>package:flutter_test/*</code></li>
+</ul>
+<p>Motivo: Core precisa ser totalmente independente de UI.</p>
+<hr>
+<h3 id="2-core_no_data_or_presentation-error">2️⃣ core_no_data_or_presentation (ERROR)</h3>
+<p>❌ Proíbe o <code>core</code> de depender de <code>data</code> ou <code>presentation</code>.</p>
+<p>Regra de ouro da Clean Architecture:</p>
+<blockquote>
+<p>Dependências sempre apontam para dentro.</p>
+</blockquote>
+<hr>
+<h3 id="3-data_no_presentation-error">3️⃣ data_no_presentation (ERROR)</h3>
+<p>❌ <code>data</code> não pode importar nada de <code>presentation</code>.</p>
+<p>Motivo:</p>
+<ul>
+<li>Evita acoplamento de infraestrutura com UI</li>
+<li>Garante testabilidade</li>
+</ul>
+<hr>
+<h3 id="4-presentation_no_data-warning-configurvel">4️⃣ presentation_no_data (WARNING configurável)</h3>
+<p>⚠️ Por padrão, <code>presentation</code> <strong>não deve depender diretamente de <code>data</code></strong>.</p>
+<p>✔️ Usecases e contratos devem vir do <code>core</code>.</p>
+<p>Essa regra pode ser configurada para <strong>ERROR</strong>.</p>
+<hr>
+<h2 id="-instalao">📦 Instalação</h2>
+<h3 id="1-adicione-as-dependncias-no-app-flutter">1) Adicione as dependências no app Flutter</h3>
+<pre class="language-yaml"><code class="language-yaml">dev_dependencies:
+  custom_lint: ^0.8.1
+  clean_archt_lint:
+    path: ../clean_archt_lint
+    # Ou, quando publicado:
+    # clean_archt_lint: ^1.0.0
+</code></pre>
+<blockquote>
+<p>Ajuste o <code>path</code> conforme sua estrutura de repositórios.</p>
+</blockquote>
+<hr>
+<h3 id="2-habilite-o-plugin-no-analysis_optionsyaml">2) Habilite o plugin no <code>analysis_options.yaml</code></h3>
+<pre class="language-yaml"><code class="language-yaml">analyzer:
+  plugins:
+    - custom_lint
+</code></pre>
+<hr>
+<h2 id="-como-rodar">▶️ Como rodar</h2>
+<pre class="language-bash"><code class="language-bash"># Execução única
+dart run custom_lint
+
+# Modo watch (re-executa ao salvar arquivos)
+dart run custom_lint --watch
+</code></pre>
+<p>No VSCode / Android Studio:</p>
+<ul>
+<li>Os erros aparecem automaticamente no editor</li>
+<li>Funciona em tempo real enquanto você digita</li>
+</ul>
+<hr>
+<h2 id="-configurao">⚙️ Configuração</h2>
+<h3 id="tornar-presentation_no_data-um-error">Tornar <code>presentation_no_data</code> um ERROR</h3>
+<pre class="language-yaml"><code class="language-yaml">custom_lint:
+  rules:
+    - presentation_no_data:
+        severity: error
+</code></pre>
+<hr>
+<h3 id="ignorar-paths-especficos-exemplo">Ignorar paths específicos (exemplo)</h3>
+<pre class="language-yaml"><code class="language-yaml">custom_lint:
+  rules:
+    - core_no_flutter:
+        ignore:
+          - lib/core/di/**
+</code></pre>
+<p>Útil para casos muito específicos como bootstrap de DI.</p>
+<hr>
+<h2 id="-exemplos">✅ Exemplos</h2>
+<h3 id="import-permitido">Import permitido</h3>
+<pre class="language-dart"><code class="language-dart">import 'package:my_app/core/usecases/get_user.dart';
+</code></pre>
+<h3 id="import-proibido-core--flutter">Import proibido (core → flutter)</h3>
+<pre class="language-dart"><code class="language-dart">import 'package:flutter/material.dart'; // ❌ erro
+</code></pre>
+<h3 id="import-proibido-presentation--data">Import proibido (presentation → data)</h3>
+<pre class="language-dart"><code class="language-dart">import 'package:my_app/data/user_repository_impl.dart'; // ⚠️ ou ❌
+</code></pre>
+<hr>
+<h2 id="-boas-prticas-recomendadas">🧠 Boas práticas recomendadas</h2>
+<ul>
+<li>Interfaces sempre no <code>core</code></li>
+<li>Implementações sempre no <code>data</code></li>
+<li>UI depende apenas de abstrações</li>
+<li>Injeção de dependência resolve o resto</li>
+</ul>
+<hr>
+<h2 id="-o-que-este-lint-no-faz">❌ O que este lint NÃO faz</h2>
+<ul>
+<li>Não gera código</li>
+<li>Não corrige automaticamente</li>
+<li>Não substitui code review</li>
+</ul>
+<p>Ele apenas aponta o erro antes de virar dívida técnica.</p>
+<hr>
+<h2 id="-stack-tcnica">🧩 Stack técnica</h2>
+<ul>
+<li>Dart SDK &gt;= 3.0</li>
+<li>analyzer</li>
+<li>custom_lint_builder</li>
+<li>path</li>
+</ul>
+<p>Sem <code>build_runner</code>. Sem <code>source_gen</code>.</p>
+<hr>
+<h2 id="-resumo-rpido">🏁 Resumo rápido</h2>
+<table>
+<thead>
+<tr>
+<th>Camada</th>
+<th>Pode depender de</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>core</td>
+<td>core apenas</td>
+</tr>
+<tr>
+<td>data</td>
+<td>core, data</td>
+</tr>
+<tr>
+<td>presentation</td>
+<td>core, presentation</td>
+</tr>
+</tbody>
+</table>
+<p>Se passar disso, o lint apita.</p>
+<hr>
+<p>Arquitetura limpa não é opinião. É contrato.</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="clean_archt_lint">
+  <span class="name"><a href="clean_archt_lint/">clean_archt_lint</a></span> 
+
+</dt>
+<dd>Plugin de lint customizado para enforçar regras de Flutter Clean Architecture.
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">clean_archt_lint package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">clean_archt_lint</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="clean_archt_lint/">clean_archt_lint</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    clean_archt_lint
+      1.0.0
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
