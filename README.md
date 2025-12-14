@@ -111,9 +111,11 @@ Essa regra pode ser configurada para **ERROR**.
 
 ```yaml
 dev_dependencies:
-  custom_lint: ^0.6.0
+  custom_lint: ^0.8.1
   clean_archt_lint:
     path: ../clean_archt_lint
+    # Ou, quando publicado:
+    # clean_archt_lint: ^1.0.0
 ```
 
 > Ajuste o `path` conforme sua estrutura de repositórios.
@@ -132,10 +134,12 @@ analyzer:
 
 ## ▶️ Como rodar
 
-Manual:
-
 ```bash
+# Execução única
 dart run custom_lint
+
+# Modo watch (re-executa ao salvar arquivos)
+dart run custom_lint --watch
 ```
 
 No VSCode / Android Studio:
