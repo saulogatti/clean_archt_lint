@@ -1,0 +1,72 @@
+import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/listener.dart';
+import 'package:custom_lint_builder/custom_lint_builder.dart';
+import '../utils/import_resolver.dart';
+
+/// Regra que proíbe a camada data de depender de presentation.
+///
+/// A camada data contém implementações técnicas e infraestrutura,
+/// que não devem ter conhecimento sobre a UI.
+class DataNoPresentation extends DartLintRule {
+  const DataNoPresentation() : super(code: _code);
+
+  static const _code = LintCode(
+    name: 'data_no_presentation',
+    problemMessage: 'Data não pode depender de Presentation.',
+    correctionMessage: 'Mova contratos para Core e injete dependências.',
+    errorSeverity: ErrorSeverity.ERROR,
+  );
+
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ErrorReporter reporter,
+    CustomLintContext context,
+  ) {
+    context.registry.addImportDirective((node) {
+      final filePath = resolver.path;
+
+      // Verifica se o arquivo está na camada data
+      if (!isInLayer(filePath, 'data')) {
+        return;
+      }
+
+      final uri = node.uri.stringValue;
+      if (uri == null) return;
+
+      // Ignora imports dart: e de pacotes externos
+      if (uri.startsWith('dart:') || 
+          (uri.startsWith('package:') && !uri.contains('/lib/'))) {
+        return;
+      }
+
+      // Tenta resolver o import
+      final projectRoot = resolver.source.uri.toFilePath();
+      final segments = projectRoot.split('/');
+      final libIndex = segments.lastIndexOf('lib');
+      final rootPath = libIndex >= 0 
+          ? segments.sublist(0, libIndex).join('/')
+          : segments.sublist(0, segments.length - 1).join('/');
+
+      // Extrai o nome do pacote do URI ou assume baseado no path
+      String? packageName;
+      if (uri.startsWith('package:')) {
+        packageName = uri.split('/').first.substring('package:'.length);
+      }
+
+      final resolved = resolveImport(
+        node,
+        filePath,
+        packageName,
+        rootPath,
+      );
+
+      if (resolved == null) return;
+
+      // Verifica se importa de presentation
+      if (importsFromLayer(resolved.resolvedPath, 'presentation')) {
+        reporter.reportErrorForNode(_code, node);
+      }
+    });
+  }
+}
