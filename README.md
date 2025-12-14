@@ -1,39 +1,240 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# clean_arch_lint
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages). 
+Lint customizado para **Flutter Clean Architecture**, focado em **enforce de camadas** usando análise estática (AST) com `custom_lint`.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages). 
--->
+Este package atua como um **guardião da arquitetura**: se uma camada depender de quem não deve, o erro aparece na hora.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
-## Features
+## 🎯 Objetivo
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Garantir que a estrutura abaixo seja respeitada automaticamente:
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+```
+lib/
+ ├─ core/
+ ├─ data/
+ └─ presentation/
 ```
 
-## Additional information
+Sem discussão em PR. Sem “foi sem querer”. O lint resolve.
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+---
+
+## 🧱 Conceito das camadas
+
+### core
+
+Camada pura, sem Flutter e sem infraestrutura.
+
+Contém:
+
+- entidades
+- usecases
+- contratos (interfaces)
+- regras de negócio
+
+### data
+
+Implementações técnicas.
+
+Contém:
+
+- datasources
+- models / DTOs
+- mappers
+- implementações de repositórios (`Impl`)
+
+### presentation
+
+Interface do usuário.
+
+Contém:
+
+- widgets
+- pages
+- bloc / cubit
+- viewmodels / controllers
+
+---
+
+## 🚨 Regras de lint
+
+### 1️⃣ core\_no\_flutter (ERROR)
+
+❌ Proíbe imports de Flutter no `core`.
+
+Bloqueia:
+
+- `package:flutter/*`
+- `dart:ui`
+- `package:flutter_test/*`
+
+Motivo: Core precisa ser totalmente independente de UI.
+
+---
+
+### 2️⃣ core\_no\_data\_or\_presentation (ERROR)
+
+❌ Proíbe o `core` de depender de `data` ou `presentation`.
+
+Regra de ouro da Clean Architecture:
+
+> Dependências sempre apontam para dentro.
+
+---
+
+### 3️⃣ data\_no\_presentation (ERROR)
+
+❌ `data` não pode importar nada de `presentation`.
+
+Motivo:
+
+- Evita acoplamento de infraestrutura com UI
+- Garante testabilidade
+
+---
+
+### 4️⃣ presentation\_no\_data (WARNING configurável)
+
+⚠️ Por padrão, `presentation` **não deve depender diretamente de `data`**.
+
+✔️ Usecases e contratos devem vir do `core`.
+
+Essa regra pode ser configurada para **ERROR**.
+
+---
+
+## 📦 Instalação
+
+### 1) Adicione as dependências no app Flutter
+
+```yaml
+dev_dependencies:
+  custom_lint: ^0.6.0
+  clean_archt_lint:
+    path: ../clean_archt_lint
+```
+
+> Ajuste o `path` conforme sua estrutura de repositórios.
+
+---
+
+### 2) Habilite o plugin no `analysis_options.yaml`
+
+```yaml
+analyzer:
+  plugins:
+    - custom_lint
+```
+
+---
+
+## ▶️ Como rodar
+
+Manual:
+
+```bash
+dart run custom_lint
+```
+
+No VSCode / Android Studio:
+
+- Os erros aparecem automaticamente no editor
+- Funciona em tempo real enquanto você digita
+
+---
+
+## ⚙️ Configuração
+
+### Tornar `presentation_no_data` um ERROR
+
+```yaml
+custom_lint:
+  rules:
+    - presentation_no_data:
+        severity: error
+```
+
+---
+
+### Ignorar paths específicos (exemplo)
+
+```yaml
+custom_lint:
+  rules:
+    - core_no_flutter:
+        ignore:
+          - lib/core/di/**
+```
+
+Útil para casos muito específicos como bootstrap de DI.
+
+---
+
+## ✅ Exemplos
+
+### Import permitido
+
+```dart
+import 'package:my_app/core/usecases/get_user.dart';
+```
+
+### Import proibido (core → flutter)
+
+```dart
+import 'package:flutter/material.dart'; // ❌ erro
+```
+
+### Import proibido (presentation → data)
+
+```dart
+import 'package:my_app/data/user_repository_impl.dart'; // ⚠️ ou ❌
+```
+
+---
+
+## 🧠 Boas práticas recomendadas
+
+- Interfaces sempre no `core`
+- Implementações sempre no `data`
+- UI depende apenas de abstrações
+- Injeção de dependência resolve o resto
+
+---
+
+## ❌ O que este lint NÃO faz
+
+- Não gera código
+- Não corrige automaticamente
+- Não substitui code review
+
+Ele apenas aponta o erro antes de virar dívida técnica.
+
+---
+
+## 🧩 Stack técnica
+
+- Dart SDK >= 3.0
+- analyzer
+- custom\_lint\_builder
+- path
+
+Sem `build_runner`. Sem `source_gen`.
+
+---
+
+## 🏁 Resumo rápido
+
+| Camada       | Pode depender de   |
+| ------------ | ------------------ |
+| core         | core apenas         |
+| data         | core, data         |
+| presentation | core, presentation |
+
+Se passar disso, o lint apita.
+
+---
+
+Arquitetura limpa não é opinião. É contrato.
+

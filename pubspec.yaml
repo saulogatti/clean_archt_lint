@@ -1,7 +1,8 @@
 name: clean_archt_lint
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+publish_to: none # Remove this line if you wish to publish to pub.dev
+repository: https://github.com/saulogatti/clean_archt_lint
 
 environment:
   sdk: ^3.10.4
