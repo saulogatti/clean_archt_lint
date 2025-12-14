@@ -4,12 +4,70 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 import '../utils/import_resolver.dart';
 
-/// Regra que desencoraja a camada presentation de depender de data.
+/// Regra de lint que desencoraja a camada presentation de depender de data.
 ///
-/// A presentation deve depender apenas do core (usecases e contratos).
-/// As implementações devem ser injetadas via dependency injection.
+/// A camada presentation deve depender apenas do core (usecases e contratos).
+/// As implementações concretas devem ser injetadas via dependency injection,
+/// respeitando o princípio da inversão de dependência.
 ///
-/// Por padrão é WARNING, mas pode ser configurado para ERROR.
+/// ## Severidade
+///
+/// WARNING (padrão) - Pode ser configurado para ERROR via `analysis_options.yaml`
+///
+/// ## Regra de dependência
+///
+/// ```
+/// presentation → core ← data
+/// ```
+///
+/// Presentation não deve conhecer implementações concretas da camada data.
+///
+/// ## Configuração
+///
+/// Para transformar em ERROR, adicione em `analysis_options.yaml`:
+///
+/// ```yaml
+/// custom_lint:
+///   rules:
+///     - presentation_no_data:
+///         severity: error
+/// ```
+///
+/// ## Exemplo de violação
+///
+/// ```dart
+/// // ⚠️ Alerta - presentation/controllers/user_controller.dart
+/// import 'package:my_app/data/repositories/user_repository_impl.dart';
+///
+/// class UserController {
+///   final UserRepositoryImpl repository; // Conhece implementação concreta
+///   
+///   UserController() : repository = UserRepositoryImpl(); // Acoplamento direto
+/// }
+/// ```
+///
+/// ## Solução
+///
+/// ```dart
+/// // ✅ Correto - presentation/controllers/user_controller.dart
+/// import 'package:my_app/core/contracts/user_repository.dart';
+/// import 'package:my_app/core/usecases/get_user.dart';
+///
+/// class UserController {
+///   final GetUser getUser; // Depende do usecase do core
+///   
+///   UserController(this.getUser); // Implementação injetada
+/// }
+///
+/// // ✅ Correto - main.dart (ou DI container)
+/// import 'package:my_app/data/repositories/user_repository_impl.dart';
+///
+/// void main() {
+///   final repository = UserRepositoryImpl();
+///   final getUser = GetUser(repository);
+///   final controller = UserController(getUser); // Injeção de dependência
+/// }
+/// ```
 class PresentationNoData extends DartLintRule {
   static const _code = LintCode(
     name: 'presentation_no_data',
@@ -19,8 +77,15 @@ class PresentationNoData extends DartLintRule {
     errorSeverity: ErrorSeverity.WARNING,
   );
 
+  /// Cria uma instância da regra [PresentationNoData].
   const PresentationNoData() : super(code: _code);
 
+  /// Executa a análise para detectar dependências diretas de data na presentation.
+  ///
+  /// Percorre todas as diretivas de import no arquivo atual e, se o arquivo
+  /// estiver na camada presentation, resolve cada import e verifica se aponta
+  /// para a camada data. Reporta um warning (ou error, se configurado) se
+  /// encontrar violações.
   @override
   void run(
     CustomLintResolver resolver,
