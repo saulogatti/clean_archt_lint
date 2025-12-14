@@ -1,6 +1,7 @@
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+
 import '../utils/import_resolver.dart';
 
 /// Regra que proíbe a camada core de depender de data ou presentation.
@@ -8,8 +9,6 @@ import '../utils/import_resolver.dart';
 /// O core deve ser a camada mais interna, sem dependências externas
 /// além de outras partes do próprio core.
 class CoreNoDataOrPresentation extends DartLintRule {
-  const CoreNoDataOrPresentation() : super(code: _code);
-
   static const _code = LintCode(
     name: 'core_no_data_or_presentation',
     problemMessage: 'Core não pode depender de Data ou Presentation.',
@@ -17,6 +16,8 @@ class CoreNoDataOrPresentation extends DartLintRule {
         'Defina contratos no Core e implemente no Data. A UI consome apenas o Core.',
     errorSeverity: ErrorSeverity.ERROR,
   );
+
+  const CoreNoDataOrPresentation() : super(code: _code);
 
   @override
   void run(
@@ -35,9 +36,9 @@ class CoreNoDataOrPresentation extends DartLintRule {
       final uri = node.uri.stringValue;
       if (uri == null) return;
 
-      // Ignora imports dart: e de pacotes externos
-      if (uri.startsWith('dart:') || 
-          (uri.startsWith('package:') && !uri.contains('/lib/'))) {
+      // Ignora imports dart: e de pacotes que sejam do próprio core
+      if (uri.startsWith('dart:') ||
+          (uri.startsWith('package:') && uri.contains('/core/'))) {
         return;
       }
 
@@ -58,7 +59,7 @@ class CoreNoDataOrPresentation extends DartLintRule {
       // Verifica se importa de data ou presentation
       if (importsFromLayer(resolved.resolvedPath, 'data') ||
           importsFromLayer(resolved.resolvedPath, 'presentation')) {
-        reporter.reportErrorForNode(_code, node);
+        reporter.atNode(node, _code);
       }
     });
   }

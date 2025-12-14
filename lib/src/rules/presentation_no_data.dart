@@ -1,6 +1,7 @@
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+
 import '../utils/import_resolver.dart';
 
 /// Regra que desencoraja a camada presentation de depender de data.
@@ -10,8 +11,6 @@ import '../utils/import_resolver.dart';
 ///
 /// Por padrão é WARNING, mas pode ser configurado para ERROR.
 class PresentationNoData extends DartLintRule {
-  const PresentationNoData() : super(code: _code);
-
   static const _code = LintCode(
     name: 'presentation_no_data',
     problemMessage: 'Presentation não deve depender diretamente de Data.',
@@ -19,6 +18,8 @@ class PresentationNoData extends DartLintRule {
         'Dependa apenas do Core (usecases/contratos) e injete implementações.',
     errorSeverity: ErrorSeverity.WARNING,
   );
+
+  const PresentationNoData() : super(code: _code);
 
   @override
   void run(
@@ -38,8 +39,8 @@ class PresentationNoData extends DartLintRule {
       if (uri == null) return;
 
       // Ignora imports dart: e de pacotes externos
-      if (uri.startsWith('dart:') || 
-          (uri.startsWith('package:') && !uri.contains('/lib/'))) {
+      if (uri.startsWith('dart:') ||
+          (uri.startsWith('package:') && uri.contains('/presentation/'))) {
         return;
       }
 
@@ -59,7 +60,7 @@ class PresentationNoData extends DartLintRule {
 
       // Verifica se importa de data
       if (importsFromLayer(resolved.resolvedPath, 'data')) {
-        reporter.reportErrorForNode(_code, node);
+        reporter.atNode(node, _code);
       }
     });
   }

@@ -1,6 +1,7 @@
-import 'package:analyzer/error/error.dart';
+import 'package:analyzer/error/error.dart' hide LintCode;
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+
 import '../utils/import_resolver.dart';
 
 /// Regra que proíbe imports de Flutter na camada core.
@@ -8,14 +9,14 @@ import '../utils/import_resolver.dart';
 /// A camada core deve ser totalmente independente de UI e frameworks,
 /// contendo apenas lógica de negócio pura.
 class CoreNoFlutter extends DartLintRule {
-  const CoreNoFlutter() : super(code: _code);
-
   static const _code = LintCode(
     name: 'core_no_flutter',
     problemMessage: 'Core não pode depender de Flutter/UI.',
     correctionMessage: 'Mova esse código para presentation ou abstraia.',
     errorSeverity: ErrorSeverity.ERROR,
   );
+
+  const CoreNoFlutter() : super(code: _code);
 
   @override
   void run(
@@ -36,7 +37,7 @@ class CoreNoFlutter extends DartLintRule {
 
       // Verifica se é um import de Flutter
       if (isFlutterImport(uri)) {
-        reporter.reportErrorForNode(_code, node);
+         reporter.atNode(node, _code);
       }
     });
   }

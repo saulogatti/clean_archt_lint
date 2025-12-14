@@ -5,8 +5,8 @@
 // ignore_for_file: unused_import
 
 // ❌ ERRO: Core não pode depender de Data ou Presentation
-// import '../data/models/user_model.dart';
-// import '../presentation/pages/user_page.dart';
+// import 'package:clean_archt_lint_example/data/models/user_model.dart';
+// import 'package:clean_archt_lint_example/presentation/pages/user_page.dart';
 
 /// Este é um exemplo comentado para não quebrar a build.
 /// Descomente os imports acima para ver o lint em ação.
