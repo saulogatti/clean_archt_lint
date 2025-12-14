@@ -27,10 +27,9 @@ import '../utils/import_resolver.dart';
 /// Para transformar em ERROR, adicione em `analysis_options.yaml`:
 ///
 /// ```yaml
-/// custom_lint:
-///   rules:
-///     - presentation_no_data:
-///         severity: error
+/// analyzer:
+///   errors:
+///     presentation_no_data: error
 /// ```
 ///
 /// ## Exemplo de violação

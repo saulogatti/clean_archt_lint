@@ -30,6 +30,14 @@
 ///     - data_no_presentation
 ///     - presentation_no_data
 /// ```
+///
+/// Para personalizar a severidade de uma regra:
+///
+/// ```yaml
+/// analyzer:
+///   errors:
+///     presentation_no_data: error  # Transforma WARNING em ERROR
+/// ```
 library;
 
 import 'package:custom_lint_builder/custom_lint_builder.dart';

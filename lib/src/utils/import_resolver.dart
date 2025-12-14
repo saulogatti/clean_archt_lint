@@ -42,14 +42,16 @@ class ResolvedImport {
 
 /// Normaliza um caminho de arquivo para usar `/` como separador.
 ///
-/// Garante compatibilidade entre Windows, macOS e Linux, convertendo
-/// barras invertidas (`\`) em barras normais (`/`).
+/// Resolve segmentos de caminho (como `.` e `..`) e garante compatibilidade
+/// entre Windows, macOS e Linux, convertendo barras invertidas (`\`) em
+/// barras normais (`/`).
 ///
 /// ## Exemplo
 ///
 /// ```dart
 /// normalizePath('lib\\core\\user.dart'); // Retorna: 'lib/core/user.dart'
 /// normalizePath('lib/core/user.dart');   // Retorna: 'lib/core/user.dart'
+/// normalizePath('lib/core/../data/user.dart'); // Retorna: 'lib/data/user.dart'
 /// ```
 String normalizePath(String path) {
   return p.normalize(path).replaceAll(r'\', '/');
@@ -241,7 +243,7 @@ bool isFlutterImport(String uri) {
 /// // Retorna: '/projeto'
 ///
 /// extractProjectRoot('/projeto/test/widget_test.dart');
-/// // Retorna: '/projeto/test' (fallback, pois 'lib' não está no caminho)
+/// // Retorna: '/projeto' (fallback - diretório pai de 'test')
 /// ```
 String extractProjectRoot(String filePath) {
   final segments = filePath.split('/');
