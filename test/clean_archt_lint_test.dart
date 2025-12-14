@@ -34,6 +34,24 @@ void main() {
       expect(isFlutterImport('dart:core'), isFalse);
       expect(isFlutterImport('package:my_app/core/user.dart'), isFalse);
     });
+
+    test('extractProjectRoot should extract project root path', () {
+      expect(
+        extractProjectRoot('/home/user/project/lib/core/user.dart'),
+        equals('/home/user/project'),
+      );
+      expect(
+        extractProjectRoot('/project/lib/data/models/user_model.dart'),
+        equals('/project'),
+      );
+    });
+
+    test('extractPackageName should extract package name from URI', () {
+      expect(extractPackageName('package:flutter/material.dart'), equals('flutter'));
+      expect(extractPackageName('package:my_app/core/user.dart'), equals('my_app'));
+      expect(extractPackageName('dart:core'), isNull);
+      expect(extractPackageName('../relative/path.dart'), isNull);
+    });
   });
 
   group('Layer Dependency Rules', () {

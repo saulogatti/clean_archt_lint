@@ -40,25 +40,16 @@ class DataNoPresentation extends DartLintRule {
         return;
       }
 
-      // Tenta resolver o import
-      final projectRoot = resolver.source.uri.toFilePath();
-      final segments = projectRoot.split('/');
-      final libIndex = segments.lastIndexOf('lib');
-      final rootPath = libIndex >= 0 
-          ? segments.sublist(0, libIndex).join('/')
-          : segments.sublist(0, segments.length - 1).join('/');
-
-      // Extrai o nome do pacote do URI ou assume baseado no path
-      String? packageName;
-      if (uri.startsWith('package:')) {
-        packageName = uri.split('/').first.substring('package:'.length);
-      }
+      // Resolve o import usando as funções utilitárias
+      final sourceFilePath = resolver.source.uri.toFilePath();
+      final projectRoot = extractProjectRoot(sourceFilePath);
+      final packageName = extractPackageName(uri);
 
       final resolved = resolveImport(
         node,
         filePath,
         packageName,
-        rootPath,
+        projectRoot,
       );
 
       if (resolved == null) return;

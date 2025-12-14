@@ -53,6 +53,7 @@ ResolvedImport? resolveImport(
   String projectRoot,
 ) {
   final uri = importDirective.uri.stringValue;
+  // Retorna null se o URI não puder ser extraído (ex: interpolação de string)
   if (uri == null) return null;
 
   // Ignora imports dart: e package: de terceiros que não são do pacote atual
@@ -105,4 +106,33 @@ bool isFlutterImport(String uri) {
   return uri.startsWith('package:flutter/') ||
       uri.startsWith('package:flutter_test/') ||
       uri == 'dart:ui';
+}
+
+/// Extrai o caminho raiz do projeto a partir do caminho do arquivo.
+///
+/// Retorna o caminho até o diretório que contém `lib/`.
+String extractProjectRoot(String filePath) {
+  final segments = filePath.split('/');
+  final libIndex = segments.lastIndexOf('lib');
+  
+  if (libIndex >= 0) {
+    return segments.sublist(0, libIndex).join('/');
+  }
+  
+  // Fallback: retorna o diretório pai
+  return segments.sublist(0, segments.length - 1).join('/');
+}
+
+/// Extrai o nome do pacote a partir de um URI de import.
+///
+/// Retorna null se o URI não for um import de pacote.
+String? extractPackageName(String uri) {
+  if (!uri.startsWith('package:')) {
+    return null;
+  }
+  
+  final parts = uri.split('/');
+  if (parts.isEmpty) return null;
+  
+  return parts.first.substring('package:'.length);
 }
