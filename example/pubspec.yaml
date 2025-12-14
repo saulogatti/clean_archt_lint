@@ -1,0 +1,15 @@
+name: clean_archt_lint_example
+description: Exemplo de uso do clean_archt_lint package.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  # Dependências do exemplo (se necessário)
+
+dev_dependencies:
+  custom_lint: ^0.8.1
+  clean_archt_lint:
+    path: ../

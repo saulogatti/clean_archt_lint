@@ -1,0 +1,9 @@
+analyzer:
+  plugins:
+    - custom_lint
+
+# Configuração opcional para tornar presentation_no_data um ERROR
+# custom_lint:
+#   rules:
+#     - presentation_no_data:
+#         severity: error
