@@ -1,6 +1,6 @@
-# Exemplo de uso do clean_archt_lint
+# Exemplo de uso do clean_arch_lint
 
-Este exemplo demonstra como usar o `clean_archt_lint` para garantir a arquitetura limpa em projetos Flutter/Dart.
+Este exemplo demonstra como usar o `clean_arch_lint` para garantir a arquitetura limpa em projetos Flutter/Dart.
 
 ## Estrutura
 

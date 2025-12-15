@@ -1,8 +1,8 @@
-name: clean_archt_lint
+name: clean_arch_lint
 description: Custom lint rules for enforcing Clean Architecture boundaries in Flutter/Dart projects.
 version: 1.0.0
-publish_to: none # Remove this line if you wish to publish to pub.dev
-repository: https://github.com/saulogatti/clean_archt_lint
+
+repository: https://github.com/saulogatti/clean_arch_lint
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

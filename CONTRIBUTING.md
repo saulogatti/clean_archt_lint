@@ -1,12 +1,12 @@
-# Contribuindo para clean_archt_lint
+# Contribuindo para clean_arch_lint
 
-Obrigado por considerar contribuir com o clean_archt_lint! 🎉
+Obrigado por considerar contribuir com o clean_arch_lint! 🎉
 
 ## Como Contribuir
 
 ### Reportando Bugs
 
-1. Verifique se o bug já não foi reportado nas [Issues](https://github.com/saulogatti/clean_archt_lint/issues)
+1. Verifique se o bug já não foi reportado nas [Issues](https://github.com/saulogatti/clean_arch_lint/issues)
 2. Abra uma nova issue incluindo:
    - Descrição clara do problema
    - Passos para reproduzir
@@ -27,8 +27,8 @@ Obrigado por considerar contribuir com o clean_archt_lint! 🎉
 1. **Fork** o repositório
 2. **Clone** seu fork:
    ```bash
-   git clone https://github.com/seu-usuario/clean_archt_lint.git
-   cd clean_archt_lint
+   git clone https://github.com/seu-usuario/clean_arch_lint.git
+   cd clean_arch_lint
    ```
 
 3. **Crie uma branch** para sua feature/fix:
@@ -78,9 +78,9 @@ Obrigado por considerar contribuir com o clean_archt_lint! 🎉
 ## Estrutura do Projeto
 
 ```
-clean_archt_lint/
+clean_arch_lint/
 ├── lib/
-│   ├── clean_archt_lint.dart       # Entry point do plugin
+│   ├── clean_arch_lint.dart       # Entry point do plugin
 │   └── src/
 │       ├── rules/                   # Regras de lint
 │       │   ├── core_no_flutter.dart
@@ -124,7 +124,7 @@ clean_archt_lint/
    }
    ```
 
-2. **Registre a regra** em `lib/clean_archt_lint.dart`:
+2. **Registre a regra** em `lib/clean_arch_lint.dart`:
    ```dart
    import 'src/rules/minha_regra.dart';
    

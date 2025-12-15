@@ -18,7 +18,7 @@
 
 ## 1.0.0
 
-- Initial release of clean_archt_lint
+- Initial release of clean_arch_lint
 - Implements custom lint rules for Flutter Clean Architecture
 - **Rules:**
   - `core_no_flutter`: Prevents Flutter/UI imports in core layer (ERROR)

@@ -2,7 +2,7 @@ import 'lib/core/usecases/get_user.dart';
 import 'lib/data/repositories/user_repository_impl.dart';
 import 'lib/presentation/pages/user_page.dart';
 
-/// Exemplo de uso do clean_archt_lint.
+/// Exemplo de uso do clean_arch_lint.
 ///
 /// Este exemplo demonstra a estrutura correta de Clean Architecture:
 /// - core: entidades e usecases (contratos)
@@ -17,13 +17,13 @@ import 'lib/presentation/pages/user_page.dart';
 void main() async {
   // Dependency Injection - injeta a implementação
   final GetUser getUser = UserRepositoryImpl();
-  
+
   // Presentation recebe apenas o contrato do core
   final userPage = UserPage(getUser: getUser);
-  
+
   // Carrega o usuário
   await userPage.loadUser('1');
-  
+
   print('\n✅ Arquitetura limpa implementada corretamente!');
   print('📦 Core: define contratos');
   print('🔧 Data: implementa contratos');

@@ -1,4 +1,4 @@
-# clean_archt_lint - AI Agent Instructions
+# clean_arch_lint - AI Agent Instructions
 
 ## Project Overview
 
@@ -22,7 +22,7 @@ lib/
 
 ### Key Components
 
-1. **Plugin Entry** ([lib/clean_archt_lint.dart](../lib/clean_archt_lint.dart))
+1. **Plugin Entry** ([lib/clean_arch_lint.dart](../lib/clean_arch_lint.dart))
    - Registers all lint rules via `PluginBase`
    - Returns `List<LintRule>` from `getLintRules()`
 
@@ -67,7 +67,7 @@ dart run custom_lint --watch
 ### Adding a New Rule
 
 1. Create `lib/src/rules/my_new_rule.dart` extending `DartLintRule`
-2. Register in `lib/clean_archt_lint.dart` → `getLintRules()`
+2. Register in `lib/clean_arch_lint.dart` → `getLintRules()`
 3. Add tests in `test/` that verify both violations and correct usage
 4. Update README.md and USAGE.md with rule documentation
 5. Add examples in `example/lib/` showing violations

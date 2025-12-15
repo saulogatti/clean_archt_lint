@@ -112,10 +112,10 @@ Essa regra pode ser configurada para **ERROR**.
 ```yaml
 dev_dependencies:
   custom_lint: ^0.8.1
-  clean_archt_lint:
-    path: ../clean_archt_lint
+  clean_arch_lint:
+    path: ../clean_arch_lint
     # Ou, quando publicado:
-    # clean_archt_lint: ^1.0.0
+    # clean_arch_lint: ^1.0.0
 ```
 
 > Ajuste o `path` conforme sua estrutura de repositórios.

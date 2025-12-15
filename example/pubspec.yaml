@@ -1,5 +1,5 @@
 name: clean_archt_lint_example
-description: Exemplo de uso do clean_archt_lint package.
+description: Exemplo de uso do clean_arch_lint package.
 version: 1.0.0
 publish_to: none
 
@@ -13,5 +13,5 @@ dependencies:
 dev_dependencies:
   flutter_lints: ^6.0.0
   custom_lint: ^0.8.1
-  clean_archt_lint:
+  clean_arch_lint:
     path: ../

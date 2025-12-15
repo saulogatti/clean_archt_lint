@@ -1,6 +1,6 @@
-# Guia de Uso - clean_archt_lint
+# Guia de Uso - clean_arch_lint
 
-Este guia mostra como usar o `clean_archt_lint` em seus projetos Flutter/Dart.
+Este guia mostra como usar o `clean_arch_lint` em seus projetos Flutter/Dart.
 
 ## Instalação
 
@@ -11,10 +11,10 @@ No arquivo `pubspec.yaml` do seu app Flutter:
 ```yaml
 dev_dependencies:
   custom_lint: ^0.8.1
-  clean_archt_lint:
-    path: ../clean_archt_lint  # Ajuste o caminho conforme necessário
+  clean_arch_lint:
+    path: ../clean_arch_lint  # Ajuste o caminho conforme necessário
     # Ou, quando publicado:
-    # clean_archt_lint: ^1.0.0
+    # clean_arch_lint: ^1.0.0
 ```
 
 ### 2. Configure o analyzer
@@ -336,4 +336,4 @@ dart run clean_archt_lint_example.dart
 ## Suporte
 
 Problemas ou dúvidas? Abra uma issue no repositório:
-https://github.com/saulogatti/clean_archt_lint/issues
+https://github.com/saulogatti/clean_arch_lint/issues
