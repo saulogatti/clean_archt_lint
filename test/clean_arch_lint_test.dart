@@ -10,6 +10,7 @@ void main() {
     });
 
     test('isInLayer should detect if file is in specified layer', () {
+      // Standard /lib/{layer}/ pattern
       expect(isInLayer('/project/lib/core/entities/user.dart', 'core'), isTrue);
       expect(isInLayer('/project/lib/data/models/user.dart', 'data'), isTrue);
       expect(
@@ -17,13 +18,27 @@ void main() {
               '/project/lib/presentation/pages/home.dart', 'presentation'),
           isTrue);
 
+      // /lib/src/{layer}/ pattern
+      expect(isInLayer('/project/lib/src/core/entities/user.dart', 'core'), isTrue);
+      expect(isInLayer('/project/lib/src/data/models/user.dart', 'data'), isTrue);
+      expect(
+          isInLayer(
+              '/project/lib/src/presentation/pages/home.dart', 'presentation'),
+          isTrue);
+
+      // Negative cases
       expect(
           isInLayer('/project/lib/core/entities/user.dart', 'data'), isFalse);
       expect(isInLayer('/project/lib/data/models/user.dart', 'presentation'),
           isFalse);
+      expect(
+          isInLayer('/project/lib/src/core/entities/user.dart', 'data'), isFalse);
+      expect(isInLayer('/project/lib/src/data/models/user.dart', 'presentation'),
+          isFalse);
     });
 
     test('importsFromLayer should detect imports from specific layer', () {
+      // Standard /lib/{layer}/ pattern
       expect(importsFromLayer('/project/lib/core/entities/user.dart', 'core'),
           isTrue);
       expect(importsFromLayer('/project/lib/data/models/user.dart', 'data'),
@@ -33,7 +48,20 @@ void main() {
               '/project/lib/presentation/pages/home.dart', 'presentation'),
           isTrue);
 
+      // /lib/src/{layer}/ pattern
+      expect(importsFromLayer('/project/lib/src/core/entities/user.dart', 'core'),
+          isTrue);
+      expect(importsFromLayer('/project/lib/src/data/models/user.dart', 'data'),
+          isTrue);
+      expect(
+          importsFromLayer(
+              '/project/lib/src/presentation/pages/home.dart', 'presentation'),
+          isTrue);
+
+      // Negative cases
       expect(importsFromLayer('/project/lib/core/entities/user.dart', 'data'),
+          isFalse);
+      expect(importsFromLayer('/project/lib/src/core/entities/user.dart', 'data'),
           isFalse);
     });
 
