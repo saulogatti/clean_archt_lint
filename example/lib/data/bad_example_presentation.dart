@@ -1,16 +1,16 @@
-// EXEMPLO DE VIOLAÇÃO: data_no_presentation
-// Este arquivo demonstra o erro que será reportado
-// quando data tentar importar presentation.
+// VIOLATION EXAMPLE: data_no_presentation
+// This file demonstrates the error that will be reported
+// when data tries to import presentation.
 
 // ignore_for_file: unused_import
 
-// ❌ ERRO: Data não pode depender de Presentation
+// ❌ ERROR: Data cannot depend on Presentation
 // import '../presentation/pages/user_page.dart';
 
-/// Este é um exemplo comentado para não quebrar a build.
-/// Descomente o import acima para ver o lint em ação.
+/// This is a commented example to not break the build.
+/// Uncomment the import above to see the lint in action.
 class BadExamplePresentation {
   void someMethod() {
-    // Tentativa de usar presentation no data
+    // Attempting to use presentation in data
   }
 }

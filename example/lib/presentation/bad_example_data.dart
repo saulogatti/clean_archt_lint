@@ -1,20 +1,20 @@
-// EXEMPLO DE VIOLAÇÃO: presentation_no_data
-// Este arquivo demonstra o WARNING que será reportado
-// quando presentation tentar importar data diretamente.
+// VIOLATION EXAMPLE: presentation_no_data
+// This file demonstrates the WARNING that will be reported
+// when presentation tries to import data directly.
 
 // ignore_for_file: unused_import
 
-// ⚠️ WARNING: Presentation não deve depender diretamente de Data
+// ⚠️ WARNING: Presentation should not depend directly on Data
 // import '../data/repositories/user_repository_impl.dart';
 
-/// Este é um exemplo comentado para não quebrar a build.
-/// Descomente o import acima para ver o lint em ação.
+/// This is a commented example to not break the build.
+/// Uncomment the import above to see the lint in action.
 ///
-/// A solução correta é:
-/// 1. Depender apenas do contrato do core (GetUser)
-/// 2. Injetar a implementação (UserRepositoryImpl) via DI
+/// The correct solution is:
+/// 1. Depend only on the core contract (GetUser)
+/// 2. Inject the implementation (UserRepositoryImpl) via DI
 class BadExampleData {
   void someMethod() {
-    // Tentativa de usar data diretamente no presentation
+    // Attempting to use data directly in presentation
   }
 }

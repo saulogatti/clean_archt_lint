@@ -1,10 +1,10 @@
 import '../../core/entities/user.dart';
 import '../../core/usecases/get_user.dart';
 
-/// Página de usuário.
+/// User page.
 ///
-/// Camada presentation - UI que depende apenas do core.
-/// As implementações são injetadas via dependency injection.
+/// Presentation layer - UI that depends only on core.
+/// Implementations are injected via dependency injection.
 class UserPage {
   final GetUser getUser;
 
@@ -18,7 +18,7 @@ class UserPage {
   }
 
   void _displayUser(User user) {
-    // Exibir usuário na UI
+    // Display user in UI
     print('User: ${user.name} (${user.email})');
   }
 }

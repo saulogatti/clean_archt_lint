@@ -1,8 +1,8 @@
 import '../../core/entities/user.dart';
 
-/// Modelo de dados para usuário.
+/// Data model for user.
 ///
-/// Camada data - implementação técnica que estende a entidade do core.
+/// Data layer - technical implementation that extends the core entity.
 class UserModel extends User {
   const UserModel({
     required super.id,

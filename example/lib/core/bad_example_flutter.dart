@@ -1,16 +1,16 @@
-// EXEMPLO DE VIOLAÇÃO: core_no_flutter
-// Este arquivo demonstra o erro que será reportado
-// quando o core tentar importar Flutter.
+// VIOLATION EXAMPLE: core_no_flutter
+// This file demonstrates the error that will be reported
+// when core tries to import Flutter.
 
 // ignore_for_file: unused_import
 
-// ❌ ERRO: Core não pode depender de Flutter/UI
+// ❌ ERROR: Core cannot depend on Flutter/UI
 // import 'package:flutter/material.dart';
 
-/// Este é um exemplo comentado para não quebrar a build.
-/// Descomente o import acima para ver o lint em ação.
+/// This is a commented example to not break the build.
+/// Uncomment the import above to see the lint in action.
 class BadExampleFlutter {
   void someMethod() {
-    // Tentativa de usar Flutter no core
+    // Attempting to use Flutter in core
   }
 }

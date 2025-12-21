@@ -1,6 +1,6 @@
-/// Product page na camada presentation com estrutura /lib/src/presentation/
+/// Product page in presentation layer with /lib/src/presentation/ structure
 ///
-/// Exemplo de arquivo válido na estrutura /lib/src/presentation/
+/// Example of valid file in /lib/src/presentation/ structure
 import 'package:flutter/material.dart';
 import 'package:clean_archt_lint_example/src/core/entities/product.dart';
 

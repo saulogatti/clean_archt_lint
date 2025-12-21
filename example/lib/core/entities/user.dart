@@ -1,6 +1,6 @@
-/// Entidade de usuário.
+/// User entity.
 ///
-/// Camada core - pura lógica de negócio.
+/// Core layer - pure business logic.
 class User {
   final String id;
   final String name;

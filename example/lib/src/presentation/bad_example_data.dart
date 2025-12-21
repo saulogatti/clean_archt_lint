@@ -1,14 +1,14 @@
-/// ⚠️ BAD EXAMPLE: Presentation importando Data na estrutura /lib/src/presentation/
+/// ⚠️ BAD EXAMPLE: Presentation importing Data in /lib/src/presentation/ structure
 ///
-/// Este arquivo demonstra uma VIOLAÇÃO da regra presentation_no_data
-/// quando usando a estrutura /lib/src/presentation/
+/// This file demonstrates a VIOLATION of the presentation_no_data rule
+/// when using the /lib/src/presentation/ structure
 import 'package:flutter/material.dart';
-import 'package:clean_archt_lint_example/src/data/models/product_model.dart'; // ⚠️ WARNING: Presentation não deve importar Data diretamente
+import 'package:clean_archt_lint_example/src/data/models/product_model.dart'; // ⚠️ WARNING: Presentation should not import Data directly
 
 class BadProductController {
   Future<ProductModel> loadProduct(String id) async {
-    // Presentation não deveria conhecer implementações de data
-    // Deveria usar apenas entidades e use cases do core
+    // Presentation should not know data implementations
+    // Should use only core entities and use cases
     return const ProductModel(id: '1', name: 'Product', price: 99.99);
   }
 }

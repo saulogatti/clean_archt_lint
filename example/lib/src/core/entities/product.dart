@@ -1,6 +1,6 @@
-/// Entidade Product na camada core com estrutura /lib/src/core/
+/// Product entity in core layer with /lib/src/core/ structure
 ///
-/// Exemplo de arquivo válido na estrutura /lib/src/core/
+/// Example of valid file in /lib/src/core/ structure
 class Product {
   final String id;
   final String name;

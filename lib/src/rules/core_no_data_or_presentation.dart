@@ -4,74 +4,74 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 import '../utils/import_resolver.dart';
 
-/// Regra de lint que proíbe a camada core de depender de data ou presentation.
+/// Lint rule that prohibits the core layer from depending on data or presentation.
 ///
-/// O core deve ser a camada mais interna da arquitetura, contendo apenas
-/// lógica de negócio pura e contratos (interfaces). Não pode ter dependências
-/// de implementações técnicas (data) ou de UI (presentation).
+/// The core should be the innermost layer of the architecture, containing only
+/// pure business logic and contracts (interfaces). It cannot have dependencies
+/// on technical implementations (data) or UI (presentation).
 ///
-/// ## Severidade
+/// ## Severity
 ///
-/// ERROR - Viola o princípio da Clean Architecture (inversão de dependência)
+/// ERROR - Violates the Clean Architecture principle (dependency inversion)
 ///
-/// ## Regra de dependência
+/// ## Dependency rule
 ///
 /// ```
 /// presentation → core ← data
 /// ```
 ///
-/// O core define os contratos, e as camadas externas implementam.
+/// The core defines the contracts, and the outer layers implement them.
 ///
-/// ## Exemplo de violação
+/// ## Violation example
 ///
 /// ```dart
-/// // ❌ Errado - core/usecases/get_user.dart
+/// // ❌ Wrong - core/usecases/get_user.dart
 /// import 'package:my_app/data/repositories/user_repository_impl.dart';
 ///
 /// class GetUser {
-///   final UserRepositoryImpl repository; // Não deve conhecer implementação
+///   final UserRepositoryImpl repository; // Should not know implementation
 /// }
 /// ```
 ///
-/// ## Solução
+/// ## Solution
 ///
 /// ```dart
-/// // ✅ Correto - core/contracts/user_repository.dart
+/// // ✅ Correct - core/contracts/user_repository.dart
 /// abstract class UserRepository {
 ///   Future<User> getUser(String id);
 /// }
 ///
-/// // ✅ Correto - core/usecases/get_user.dart
+/// // ✅ Correct - core/usecases/get_user.dart
 /// import 'package:my_app/core/contracts/user_repository.dart';
 ///
 /// class GetUser {
-///   final UserRepository repository; // Depende apenas do contrato
+///   final UserRepository repository; // Depends only on the contract
 /// }
 ///
-/// // ✅ Correto - data/repositories/user_repository_impl.dart
+/// // ✅ Correct - data/repositories/user_repository_impl.dart
 /// import 'package:my_app/core/contracts/user_repository.dart';
 ///
 /// class UserRepositoryImpl implements UserRepository {
-///   // Implementação técnica na camada data
+///   // Technical implementation in the data layer
 /// }
 /// ```
 class CoreNoDataOrPresentation extends DartLintRule {
   static const _code = LintCode(
     name: 'core_no_data_or_presentation',
-    problemMessage: 'Core não pode depender de Data ou Presentation.',
+    problemMessage: 'Core cannot depend on Data or Presentation.',
     correctionMessage:
-        'Defina contratos no Core e implemente no Data. A UI consome apenas o Core.',
+        'Define contracts in Core and implement in Data. The UI consumes only Core.',
     errorSeverity: ErrorSeverity.ERROR,
   );
 
-  /// Cria uma instância da regra [CoreNoDataOrPresentation].
+  /// Creates an instance of the [CoreNoDataOrPresentation] rule.
   const CoreNoDataOrPresentation() : super(code: _code);
 
-  /// Executa a análise para detectar dependências indevidas do core.
+  /// Runs the analysis to detect unwanted dependencies from core.
   ///
-  /// Percorre todas as diretivas de import no arquivo atual e, se o arquivo
-  /// estiver na camada core, resolve cada import e verifica se aponta para
-  /// as camadas data ou presentation. Reporta um erro se encontrar violações.
+  /// Traverses all import directives in the current file and, if the file
+  /// is in the core layer, resolves each import and checks if it points to
+  /// the data or presentation layers. Reports an error if violations are found.
   @override
   void run(
     CustomLintResolver resolver,
@@ -81,7 +81,7 @@ class CoreNoDataOrPresentation extends DartLintRule {
     context.registry.addImportDirective((node) {
       final filePath = resolver.path;
 
-      // Verifica se o arquivo está na camada core
+      // Checks if the file is in the core layer
       if (!isInLayer(filePath, 'core')) {
         return;
       }
@@ -89,13 +89,13 @@ class CoreNoDataOrPresentation extends DartLintRule {
       final uri = node.uri.stringValue;
       if (uri == null) return;
 
-      // Ignora imports dart: e de pacotes que sejam do próprio core
+      // Ignores dart: imports and packages that are from core itself
       if (uri.startsWith('dart:') ||
           (uri.startsWith('package:') && uri.contains('/core/'))) {
         return;
       }
 
-      // Resolve o import usando as funções utilitárias
+      // Resolves the import using utility functions
       final sourceFilePath = resolver.source.uri.toFilePath();
       final projectRoot = extractProjectRoot(sourceFilePath);
       final packageName = extractPackageName(uri);
@@ -109,7 +109,7 @@ class CoreNoDataOrPresentation extends DartLintRule {
 
       if (resolved == null) return;
 
-      // Verifica se importa de data ou presentation
+      // Checks if it imports from data or presentation
       if (importsFromLayer(resolved.resolvedPath, 'data') ||
           importsFromLayer(resolved.resolvedPath, 'presentation')) {
         reporter.atNode(node, _code);

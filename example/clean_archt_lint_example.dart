@@ -2,30 +2,30 @@ import 'lib/core/usecases/get_user.dart';
 import 'lib/data/repositories/user_repository_impl.dart';
 import 'lib/presentation/pages/user_page.dart';
 
-/// Exemplo de uso do clean_arch_lint.
+/// clean_arch_lint usage example.
 ///
-/// Este exemplo demonstra a estrutura correta de Clean Architecture:
-/// - core: entidades e usecases (contratos)
-/// - data: implementações (repositories, models)
+/// This example demonstrates the correct Clean Architecture structure:
+/// - core: entities and usecases (contracts)
+/// - data: implementations (repositories, models)
 /// - presentation: UI (pages, widgets)
 ///
-/// Para ver os lints em ação, descomente os imports nos arquivos:
+/// To see the lints in action, uncomment the imports in the files:
 /// - lib/core/bad_example_flutter.dart
 /// - lib/core/bad_example_data.dart
 /// - lib/data/bad_example_presentation.dart
 /// - lib/presentation/bad_example_data.dart
 void main() async {
-  // Dependency Injection - injeta a implementação
+  // Dependency Injection - injects the implementation
   final GetUser getUser = UserRepositoryImpl();
 
-  // Presentation recebe apenas o contrato do core
+  // Presentation receives only the core contract
   final userPage = UserPage(getUser: getUser);
 
-  // Carrega o usuário
+  // Loads the user
   await userPage.loadUser('1');
 
-  print('\n✅ Arquitetura limpa implementada corretamente!');
-  print('📦 Core: define contratos');
-  print('🔧 Data: implementa contratos');
-  print('🎨 Presentation: consome contratos via DI');
+  print('\n✅ Clean architecture implemented correctly!');
+  print('📦 Core: defines contracts');
+  print('🔧 Data: implements contracts');
+  print('🎨 Presentation: consumes contracts via DI');
 }

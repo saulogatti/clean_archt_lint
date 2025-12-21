@@ -1,8 +1,8 @@
 import '../entities/user.dart';
 
-/// Contrato para buscar usuário.
+/// Contract to fetch user.
 ///
-/// Camada core - define o contrato que será implementado no data.
+/// Core layer - defines the contract that will be implemented in data.
 abstract class GetUser {
   Future<User?> call(String userId);
 }

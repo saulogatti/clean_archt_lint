@@ -4,73 +4,73 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 import '../utils/import_resolver.dart';
 
-/// Regra de lint que proíbe a camada data de depender de presentation.
+/// Lint rule that prohibits the data layer from depending on presentation.
 ///
-/// A camada data contém implementações técnicas e infraestrutura (APIs,
-/// banco de dados, serviços externos). Não deve ter conhecimento sobre
-/// a UI ou componentes de apresentação.
+/// The data layer contains technical implementations and infrastructure (APIs,
+/// database, external services). It should not have knowledge about
+/// the UI or presentation components.
 ///
-/// ## Severidade
+/// ## Severity
 ///
-/// ERROR - Viola a separação de responsabilidades da Clean Architecture
+/// ERROR - Violates the separation of concerns of Clean Architecture
 ///
-/// ## Regra de dependência
+/// ## Dependency rule
 ///
 /// ```
 /// presentation → core ← data
 /// ```
 ///
-/// Data e presentation são camadas paralelas que dependem do core,
-/// mas não devem conhecer uma à outra.
+/// Data and presentation are parallel layers that depend on core,
+/// but should not know about each other.
 ///
-/// ## Exemplo de violação
+/// ## Violation example
 ///
 /// ```dart
-/// // ❌ Errado - data/datasources/api_datasource.dart
+/// // ❌ Wrong - data/datasources/api_datasource.dart
 /// import 'package:my_app/presentation/controllers/user_controller.dart';
 ///
 /// class ApiDataSource {
 ///   void notifyUI(UserController controller) {
-///     // Camada data não deve conhecer controllers de UI
+///     // Data layer should not know UI controllers
 ///   }
 /// }
 /// ```
 ///
-/// ## Solução
+/// ## Solution
 ///
 /// ```dart
-/// // ✅ Correto - data/datasources/api_datasource.dart
+/// // ✅ Correct - data/datasources/api_datasource.dart
 /// import 'package:my_app/core/entities/user.dart';
 ///
 /// class ApiDataSource {
 ///   Future<User> fetchUser(String id) {
-///     // Retorna entidades do core, não componentes de UI
+///     // Returns core entities, not UI components
 ///   }
 /// }
 ///
-/// // ✅ Correto - presentation/controllers/user_controller.dart
+/// // ✅ Correct - presentation/controllers/user_controller.dart
 /// import 'package:my_app/core/usecases/get_user.dart';
 ///
 /// class UserController {
-///   final GetUser getUser; // Usa usecase do core, não datasource
+///   final GetUser getUser; // Uses core usecase, not datasource
 /// }
 /// ```
 class DataNoPresentation extends DartLintRule {
   static const _code = LintCode(
     name: 'data_no_presentation',
-    problemMessage: 'Data não pode depender de Presentation.',
-    correctionMessage: 'Mova contratos para Core e injete dependências.',
+    problemMessage: 'Data cannot depend on Presentation.',
+    correctionMessage: 'Move contracts to Core and inject dependencies.',
     errorSeverity: ErrorSeverity.ERROR,
   );
 
-  /// Cria uma instância da regra [DataNoPresentation].
+  /// Creates an instance of the [DataNoPresentation] rule.
   const DataNoPresentation() : super(code: _code);
 
-  /// Executa a análise para detectar dependências de presentation na camada data.
+  /// Runs the analysis to detect presentation dependencies in the data layer.
   ///
-  /// Percorre todas as diretivas de import no arquivo atual e, se o arquivo
-  /// estiver na camada data, resolve cada import e verifica se aponta para
-  /// a camada presentation. Reporta um erro se encontrar violações.
+  /// Traverses all import directives in the current file and, if the file
+  /// is in the data layer, resolves each import and checks if it points to
+  /// the presentation layer. Reports an error if violations are found.
   @override
   void run(
     CustomLintResolver resolver,
@@ -80,7 +80,7 @@ class DataNoPresentation extends DartLintRule {
     context.registry.addImportDirective((node) {
       final filePath = resolver.path;
 
-      // Verifica se o arquivo está na camada data
+      // Checks if the file is in the data layer
       if (!isInLayer(filePath, 'data')) {
         return;
       }
@@ -88,13 +88,13 @@ class DataNoPresentation extends DartLintRule {
       final uri = node.uri.stringValue;
       if (uri == null) return;
 
-      // Ignora imports dart: e de pacotes externos
+      // Ignores dart: imports and external packages
       if (uri.startsWith('dart:') ||
           (uri.startsWith('package:') && uri.contains('/data/'))) {
         return;
       }
 
-      // Resolve o import usando as funções utilitárias
+      // Resolves the import using utility functions
       final sourceFilePath = resolver.source.uri.toFilePath();
       final projectRoot = extractProjectRoot(sourceFilePath);
       final packageName = extractPackageName(uri);
@@ -108,7 +108,7 @@ class DataNoPresentation extends DartLintRule {
 
       if (resolved == null) return;
 
-      // Verifica se importa de presentation
+      // Checks if it imports from presentation
       if (importsFromLayer(resolved.resolvedPath, 'presentation')) {
         reporter.atNode(node, _code);
       }

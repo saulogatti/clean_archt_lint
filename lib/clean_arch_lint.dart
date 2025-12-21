@@ -1,22 +1,22 @@
-/// Plugin de lint customizado para enforçar regras de Flutter Clean Architecture.
+/// Custom lint plugin for enforcing Flutter Clean Architecture rules.
 ///
-/// Este plugin garante o isolamento correto entre as camadas através de
-/// análise estática (AST), impedindo dependências indevidas entre:
+/// This plugin ensures proper isolation between layers through
+/// static analysis (AST), preventing unwanted dependencies between:
 ///
-/// - **core**: lógica de negócio pura, sem dependências de UI ou infraestrutura
-/// - **data**: implementações técnicas e infraestrutura (APIs, banco de dados)
-/// - **presentation**: interface do usuário e componentes visuais
+/// - **core**: pure business logic, without UI or infrastructure dependencies
+/// - **data**: technical implementations and infrastructure (APIs, database)
+/// - **presentation**: user interface and visual components
 ///
-/// ## Regras implementadas
+/// ## Implemented rules
 ///
-/// - [CoreNoFlutter]: Impede que a camada core importe Flutter/UI
-/// - [CoreNoDataOrPresentation]: Impede que core dependa de data ou presentation
-/// - [DataNoPresentation]: Impede que data dependa de presentation
-/// - [PresentationNoData]: Alerta quando presentation depende diretamente de data
+/// - [CoreNoFlutter]: Prevents core layer from importing Flutter/UI
+/// - [CoreNoDataOrPresentation]: Prevents core from depending on data or presentation
+/// - [DataNoPresentation]: Prevents data from depending on presentation
+/// - [PresentationNoData]: Warns when presentation directly depends on data
 ///
-/// ## Exemplo de uso
+/// ## Usage example
 ///
-/// Adicione ao `analysis_options.yaml`:
+/// Add to `analysis_options.yaml`:
 ///
 /// ```yaml
 /// analyzer:
@@ -31,12 +31,12 @@
 ///     - presentation_no_data
 /// ```
 ///
-/// Para personalizar a severidade de uma regra:
+/// To customize a rule's severity:
 ///
 /// ```yaml
 /// analyzer:
 ///   errors:
-///     presentation_no_data: error  # Transforma WARNING em ERROR
+///     presentation_no_data: error  # Transforms WARNING into ERROR
 /// ```
 library;
 
@@ -54,18 +54,18 @@ export 'src/rules/core_no_flutter.dart' show CoreNoFlutter;
 export 'src/rules/data_no_presentation.dart' show DataNoPresentation;
 export 'src/rules/presentation_no_data.dart' show PresentationNoData;
 
-/// Cria e retorna a instância do plugin de lint para Clean Architecture.
+/// Creates and returns the lint plugin instance for Clean Architecture.
 ///
-/// Esta função é chamada automaticamente pelo framework `custom_lint_builder`
-/// durante a inicialização do analisador. Não deve ser chamada manualmente.
+/// This function is automatically called by the `custom_lint_builder`
+/// framework during analyzer initialization. Should not be called manually.
 ///
-/// Retorna um [PluginBase] que registra todas as regras de lint implementadas.
-/// /// ## Regras implementadas
+/// Returns a [PluginBase] that registers all implemented lint rules.
+/// /// ## Implemented rules
 ///
-/// - [CoreNoFlutter]: Impede que a camada core importe Flutter/UI
-/// - [CoreNoDataOrPresentation]: Impede que core dependa de data ou presentation
-/// - [DataNoPresentation]: Impede que data dependa de presentation
-/// - [PresentationNoData]: Alerta quando presentation depende diretamente de data
+/// - [CoreNoFlutter]: Prevents core layer from importing Flutter/UI
+/// - [CoreNoDataOrPresentation]: Prevents core from depending on data or presentation
+/// - [DataNoPresentation]: Prevents data from depending on presentation
+/// - [PresentationNoData]: Warns when presentation directly depends on data
 PluginBase createPlugin() => _CleanArchitectureLintPlugin();
 
 class _CleanArchitectureLintPlugin extends PluginBase {

@@ -1,6 +1,6 @@
-/// Model Product na camada data com estrutura /lib/src/data/
+/// Product model in data layer with /lib/src/data/ structure
 ///
-/// Exemplo de arquivo válido na estrutura /lib/src/data/
+/// Example of valid file in /lib/src/data/ structure
 import 'package:clean_archt_lint_example/src/core/entities/product.dart';
 
 class ProductModel extends Product {

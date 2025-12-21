@@ -1,115 +1,115 @@
-# Contribuindo para clean_arch_lint
+# Contributing to clean_arch_lint
 
-Obrigado por considerar contribuir com o clean_arch_lint! 🎉
+Thank you for considering contributing to clean_arch_lint! 🎉
 
-## Como Contribuir
+## How to Contribute
 
-### Reportando Bugs
+### Reporting Bugs
 
-1. Verifique se o bug já não foi reportado nas [Issues](https://github.com/saulogatti/clean_arch_lint/issues)
-2. Abra uma nova issue incluindo:
-   - Descrição clara do problema
-   - Passos para reproduzir
-   - Comportamento esperado vs. atual
-   - Versão do Dart/Flutter
-   - Exemplo de código que causa o problema
+1. Check if the bug hasn't already been reported in [Issues](https://github.com/saulogatti/clean_arch_lint/issues)
+2. Open a new issue including:
+   - Clear description of the problem
+   - Steps to reproduce
+   - Expected vs. actual behavior
+   - Dart/Flutter version
+   - Code example that causes the problem
 
-### Sugerindo Melhorias
+### Suggesting Improvements
 
-1. Abra uma issue com a tag `enhancement`
-2. Descreva claramente:
-   - O problema que a melhoria resolve
-   - A solução proposta
-   - Exemplos de uso
+1. Open an issue with the `enhancement` tag
+2. Describe clearly:
+   - The problem the improvement solves
+   - The proposed solution
+   - Usage examples
 
-### Contribuindo com Código
+### Contributing Code
 
-1. **Fork** o repositório
-2. **Clone** seu fork:
+1. **Fork** the repository
+2. **Clone** your fork:
    ```bash
-   git clone https://github.com/seu-usuario/clean_arch_lint.git
+   git clone https://github.com/your-username/clean_arch_lint.git
    cd clean_arch_lint
    ```
 
-3. **Crie uma branch** para sua feature/fix:
+3. **Create a branch** for your feature/fix:
    ```bash
-   git checkout -b feature/minha-feature
+   git checkout -b feature/my-feature
    ```
 
-4. **Instale as dependências**:
+4. **Install dependencies**:
    ```bash
    dart pub get
    ```
 
-5. **Faça suas alterações** seguindo os padrões:
-   - Siga o [Effective Dart](https://dart.dev/guides/language/effective-dart)
-   - Use nomes descritivos para variáveis e funções
-   - Adicione comentários quando necessário
-   - Mantenha as linhas com até 80 caracteres quando possível
+5. **Make your changes** following the standards:
+   - Follow [Effective Dart](https://dart.dev/guides/language/effective-dart)
+   - Use descriptive names for variables and functions
+   - Add comments when necessary
+   - Keep lines up to 80 characters when possible
 
-6. **Adicione testes** para suas alterações:
+6. **Add tests** for your changes:
    ```bash
    dart test
    ```
 
-7. **Commit suas mudanças**:
+7. **Commit your changes**:
    ```bash
    git add .
-   git commit -m "feat: adiciona nova funcionalidade X"
+   git commit -m "feat: add new feature X"
    ```
    
    Use [Conventional Commits](https://www.conventionalcommits.org/):
-   - `feat:` para novas funcionalidades
-   - `fix:` para correções de bugs
-   - `docs:` para mudanças na documentação
-   - `test:` para adição/modificação de testes
-   - `refactor:` para refatorações
+   - `feat:` for new features
+   - `fix:` for bug fixes
+   - `docs:` for documentation changes
+   - `test:` for adding/modifying tests
+   - `refactor:` for refactorings
 
-8. **Push para seu fork**:
+8. **Push to your fork**:
    ```bash
-   git push origin feature/minha-feature
+   git push origin feature/my-feature
    ```
 
-9. **Abra um Pull Request** explicando:
-   - O que foi alterado
-   - Por que foi alterado
-   - Como testar as mudanças
+9. **Open a Pull Request** explaining:
+   - What was changed
+   - Why it was changed
+   - How to test the changes
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 clean_arch_lint/
 ├── lib/
-│   ├── clean_arch_lint.dart       # Entry point do plugin
+│   ├── clean_arch_lint.dart       # Plugin entry point
 │   └── src/
-│       ├── rules/                   # Regras de lint
+│       ├── rules/                   # Lint rules
 │       │   ├── core_no_flutter.dart
 │       │   ├── core_no_data_or_presentation.dart
 │       │   ├── data_no_presentation.dart
 │       │   └── presentation_no_data.dart
 │       └── utils/
-│           └── import_resolver.dart # Utilitários de resolução de imports
-├── example/                         # Exemplo de uso
-├── test/                           # Testes
-└── docs/                           # Documentação adicional
+│           └── import_resolver.dart # Import resolution utilities
+├── example/                         # Usage example
+├── test/                           # Tests
+└── docs/                           # Additional documentation
 ```
 
-## Adicionando uma Nova Regra de Lint
+## Adding a New Lint Rule
 
-1. **Crie o arquivo da regra** em `lib/src/rules/`:
+1. **Create the rule file** in `lib/src/rules/`:
    ```dart
-   // lib/src/rules/minha_regra.dart
+   // lib/src/rules/my_rule.dart
    import 'package:analyzer/error/error.dart';
    import 'package:analyzer/error/listener.dart';
    import 'package:custom_lint_builder/custom_lint_builder.dart';
    
-   class MinhaRegra extends DartLintRule {
-     const MinhaRegra() : super(code: _code);
+   class MyRule extends DartLintRule {
+     const MyRule() : super(code: _code);
      
      static const _code = LintCode(
-       name: 'minha_regra',
-       problemMessage: 'Descrição do problema',
-       correctionMessage: 'Como corrigir',
+       name: 'my_rule',
+       problemMessage: 'Problem description',
+       correctionMessage: 'How to fix',
        errorSeverity: ErrorSeverity.WARNING,
      );
      
@@ -119,79 +119,79 @@ clean_arch_lint/
        ErrorReporter reporter,
        CustomLintContext context,
      ) {
-       // Implementação da regra
+       // Rule implementation
      }
    }
    ```
 
-2. **Registre a regra** em `lib/clean_arch_lint.dart`:
+2. **Register the rule** in `lib/clean_arch_lint.dart`:
    ```dart
-   import 'src/rules/minha_regra.dart';
+   import 'src/rules/my_rule.dart';
    
    class _CleanArchitectureLintPlugin extends PluginBase {
      @override
      List<LintRule> getLintRules(CustomLintConfigs configs) => [
-           // ... outras regras
-           const MinhaRegra(),
+           // ... other rules
+           const MyRule(),
          ];
    }
    ```
 
-3. **Adicione testes** em `test/`:
+3. **Add tests** in `test/`:
    ```dart
-   test('minha_regra detecta violações corretamente', () {
-     // Teste aqui
+   test('my_rule detects violations correctly', () {
+     // Test here
    });
    ```
 
-4. **Documente** no README.md e USAGE.md
+4. **Document** in README.md and USAGE.md
 
-5. **Adicione exemplo** em `example/`
+5. **Add example** in `example/`
 
-## Testando Localmente
+## Testing Locally
 
-### Teste o package principal:
+### Test the main package:
 ```bash
 dart test
 ```
 
-### Teste com o exemplo:
+### Test with the example:
 ```bash
 cd example
 dart pub get
 dart run custom_lint
 ```
 
-### Teste com um projeto real:
+### Test with a real project:
 ```bash
-# No seu projeto de teste
+# In your test project
 dart pub get
 dart run custom_lint
 ```
 
-## Padrões de Código
+## Code Standards
 
-### Documentação
+### Documentation
 
-- Use `///` para doc comments
-- Documente todas as APIs públicas
-- Inclua exemplos quando apropriado
+- Use `///` for doc comments
+- Document all public APIs
+- Include examples when appropriate
 
-### Nomenclatura
+### Naming
 
 - Classes: `UpperCamelCase`
-- Funções/variáveis: `lowerCamelCase`
-- Constantes: `lowerCamelCase` (preferencial) ou `SCREAMING_CAPS`
-- Arquivos: `snake_case.dart`
+- Functions/variables: `lowerCamelCase`
+- Constants: `lowerCamelCase` (preferred) or `SCREAMING_CAPS`
+- Files: `snake_case.dart`
 
 ### Imports
 
 1. Imports `dart:`
 2. Imports `package:`
-3. Imports relativos
-4. Ordenação alfabética em cada grupo
+3. Relative imports
+4. Alphabetical ordering in each group
 
-Exemplo:
+Example:
 ```dart
 import 'dart:async';
 
@@ -201,15 +201,15 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import '../utils/import_resolver.dart';
 ```
 
-## Código de Conduta
+## Code of Conduct
 
-- Seja respeitoso e profissional
-- Aceite feedback construtivo
-- Foque no que é melhor para o projeto
-- Seja paciente com novos contribuidores
+- Be respectful and professional
+- Accept constructive feedback
+- Focus on what's best for the project
+- Be patient with new contributors
 
-## Dúvidas?
+## Questions?
 
-Abra uma issue com a tag `question` ou entre em contato através do repositório.
+Open an issue with the `question` tag or contact us through the repository.
 
-Obrigado por contribuir! 🚀
+Thank you for contributing! 🚀

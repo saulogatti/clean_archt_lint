@@ -1,8 +1,8 @@
-/// ❌ BAD EXAMPLE: Core importando Flutter na estrutura /lib/src/core/
+/// ❌ BAD EXAMPLE: Core importing Flutter in /lib/src/core/ structure
 ///
-/// Este arquivo demonstra uma VIOLAÇÃO da regra core_no_flutter
-/// quando usando a estrutura /lib/src/core/
-import 'package:flutter/material.dart'; // ❌ ERROR: Core não pode importar Flutter
+/// This file demonstrates a VIOLATION of the core_no_flutter rule
+/// when using the /lib/src/core/ structure
+import 'package:flutter/material.dart'; // ❌ ERROR: Core cannot import Flutter
 
 class BadProductWidget extends StatelessWidget {
   const BadProductWidget({super.key});
