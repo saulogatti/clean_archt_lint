@@ -61,26 +61,30 @@ String normalizePath(String path) {
 ///
 /// Analisa o caminho do arquivo para determinar se ele pertence à camada
 /// indicada por [layerName]. A detecção é baseada na estrutura de diretórios
-/// padrão do Clean Architecture: `/lib/{camada}/`.
+/// padrão do Clean Architecture: `/lib/{camada}/` ou `/lib/src/{camada}/`.
 ///
 /// O [filePath] deve ser um caminho absoluto ou relativo que contenha a
-/// estrutura `/lib/{camada}/`. O [layerName] deve ser uma das camadas
-/// válidas: 'core', 'data' ou 'presentation'.
+/// estrutura `/lib/{camada}/` ou `/lib/src/{camada}/`. O [layerName] deve ser
+/// uma das camadas válidas: 'core', 'data' ou 'presentation'.
 ///
 /// Retorna `true` se o arquivo estiver na camada especificada, `false` caso contrário.
 ///
 /// ## Exemplos
 ///
 /// ```dart
-/// isInLayer('/projeto/lib/core/entities/user.dart', 'core');        // true
-/// isInLayer('/projeto/lib/data/models/user_model.dart', 'core');    // false
-/// isInLayer('/projeto/lib/presentation/pages/home.dart', 'data');   // false
-/// isInLayer('lib/core', 'core');                                     // true
+/// isInLayer('/projeto/lib/core/entities/user.dart', 'core');            // true
+/// isInLayer('/projeto/lib/src/core/entities/user.dart', 'core');        // true
+/// isInLayer('/projeto/lib/data/models/user_model.dart', 'core');        // false
+/// isInLayer('/projeto/lib/presentation/pages/home.dart', 'data');       // false
+/// isInLayer('lib/core', 'core');                                         // true
+/// isInLayer('lib/src/core', 'core');                                     // true
 /// ```
 bool isInLayer(String filePath, String layerName) {
   final normalized = normalizePath(filePath);
   return normalized.contains('/lib/$layerName/') ||
-      normalized.endsWith('/lib/$layerName');
+      normalized.endsWith('/lib/$layerName') ||
+      normalized.contains('/lib/src/$layerName/') ||
+      normalized.endsWith('/lib/src/$layerName');
 }
 
 /// Resolve um import para seu caminho absoluto normalizado.
@@ -190,12 +194,14 @@ ResolvedImport? resolveImport(
 /// ## Exemplos
 ///
 /// ```dart
-/// importsFromLayer('/projeto/lib/core/entities/user.dart', 'core');     // true
-/// importsFromLayer('/projeto/lib/data/models/user.dart', 'data');       // true
-/// importsFromLayer('/projeto/lib/core/entities/user.dart', 'data');     // false
+/// importsFromLayer('/projeto/lib/core/entities/user.dart', 'core');         // true
+/// importsFromLayer('/projeto/lib/src/core/entities/user.dart', 'core');     // true
+/// importsFromLayer('/projeto/lib/data/models/user.dart', 'data');           // true
+/// importsFromLayer('/projeto/lib/core/entities/user.dart', 'data');         // false
 /// ```
 bool importsFromLayer(String resolvedPath, String layerName) {
-  return resolvedPath.contains('/lib/$layerName/');
+  return resolvedPath.contains('/lib/$layerName/') ||
+      resolvedPath.contains('/lib/src/$layerName/');
 }
 
 /// Verifica se um import é de um pacote Flutter ou relacionado.

@@ -41,8 +41,9 @@ dart run custom_lint --watch
 
 ## Estrutura de Camadas
 
-O lint espera que seu projeto siga esta estrutura:
+O lint suporta duas estruturas de pastas:
 
+### Estrutura 1: Direta (recomendada para projetos simples)
 ```
 lib/
  ├─ core/          # Lógica de negócio pura
@@ -57,6 +58,25 @@ lib/
      ├─ widgets/
      └─ controllers/
 ```
+
+### Estrutura 2: Com `src/` (comum em projetos maiores)
+```
+lib/
+ └─ src/
+     ├─ core/          # Lógica de negócio pura
+     │   ├─ entities/
+     │   └─ usecases/
+     ├─ data/          # Implementações técnicas
+     │   ├─ models/
+     │   ├─ datasources/
+     │   └─ repositories/
+     └─ presentation/  # Interface do usuário
+         ├─ pages/
+         ├─ widgets/
+         └─ controllers/
+```
+
+**Nota:** O lint detecta automaticamente qual estrutura você está usando. Ambas são totalmente suportadas!
 
 ---
 

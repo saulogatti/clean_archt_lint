@@ -1,3 +1,13 @@
+## 1.1.0
+
+- **Feature: Flexible folder structure support**
+  - Now supports both `/lib/{layer}/` and `/lib/src/{layer}/` patterns
+  - Automatic detection - no configuration needed
+  - Updated `isInLayer()` and `importsFromLayer()` functions to check both patterns
+  - Added comprehensive tests for both folder structures
+  - Added example files demonstrating both patterns
+  - Updated documentation (README and USAGE) to reflect new capability
+
 ## 1.0.1
 
 - **Documentation improvements** following Dart Effective Documentation guidelines:

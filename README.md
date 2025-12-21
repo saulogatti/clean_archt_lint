@@ -240,5 +240,30 @@ Se passar disso, o lint apita.
 
 ---
 
+## 📁 Estruturas Suportadas
+
+O lint suporta automaticamente duas estruturas de pastas:
+
+### Estrutura 1: Direta (projetos simples)
+```
+lib/
+ ├─ core/
+ ├─ data/
+ └─ presentation/
+```
+
+### Estrutura 2: Com `src/` (projetos maiores)
+```
+lib/
+ └─ src/
+     ├─ core/
+     ├─ data/
+     └─ presentation/
+```
+
+**Não é necessária configuração adicional** - o lint detecta automaticamente qual estrutura você está usando!
+
+---
+
 Arquitetura limpa não é opinião. É contrato.
 
