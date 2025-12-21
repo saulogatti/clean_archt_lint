@@ -4,67 +4,67 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 import '../utils/import_resolver.dart';
 
-/// Regra de lint que proíbe imports de Flutter na camada core.
+/// Lint rule that prohibits Flutter imports in the core layer.
 ///
-/// A camada core deve ser totalmente independente de UI e frameworks,
-/// contendo apenas lógica de negócio pura. Esta regra garante que nenhum
-/// código da camada core importe bibliotecas Flutter ou relacionadas a UI.
+/// The core layer should be completely independent of UI and frameworks,
+/// containing only pure business logic. This rule ensures that no
+/// code in the core layer imports Flutter or UI-related libraries.
 ///
-/// ## Severidade
+/// ## Severity
 ///
-/// ERROR - Viola o princípio fundamental da Clean Architecture
+/// ERROR - Violates the fundamental principle of Clean Architecture
 ///
-/// ## Imports bloqueados
+/// ## Blocked imports
 ///
-/// - `package:flutter/...` (todos os imports do Flutter)
-/// - `package:flutter_test/...` (biblioteca de testes do Flutter)
-/// - `dart:ui` (biblioteca de UI do Dart usada pelo Flutter)
+/// - `package:flutter/...` (all Flutter imports)
+/// - `package:flutter_test/...` (Flutter test library)
+/// - `dart:ui` (Dart UI library used by Flutter)
 ///
-/// ## Exemplo de violação
+/// ## Violation example
 ///
 /// ```dart
-/// // ❌ Errado - core/usecases/get_user.dart
+/// // ❌ Wrong - core/usecases/get_user.dart
 /// import 'package:flutter/material.dart';
 ///
 /// class GetUser {
-///   Widget buildWidget() => Container(); // Não deve ter UI no core
+///   Widget buildWidget() => Container(); // Should not have UI in core
 /// }
 /// ```
 ///
-/// ## Solução
+/// ## Solution
 ///
 /// ```dart
-/// // ✅ Correto - core/usecases/get_user.dart
+/// // ✅ Correct - core/usecases/get_user.dart
 /// class GetUser {
 ///   User call(String id) {
-///     // Apenas lógica de negócio pura
+///     // Only pure business logic
 ///   }
 /// }
 ///
-/// // ✅ Correto - presentation/widgets/user_widget.dart
+/// // ✅ Correct - presentation/widgets/user_widget.dart
 /// import 'package:flutter/material.dart';
 /// import 'package:my_app/core/usecases/get_user.dart';
 ///
 /// class UserWidget extends StatelessWidget {
-///   // UI na camada correta
+///   // UI in the correct layer
 /// }
 /// ```
 class CoreNoFlutter extends DartLintRule {
   static const _code = LintCode(
     name: 'core_no_flutter',
-    problemMessage: 'Core não pode depender de Flutter/UI.',
-    correctionMessage: 'Mova esse código para presentation ou abstraia.',
+    problemMessage: 'Core cannot depend on Flutter/UI.',
+    correctionMessage: 'Move this code to presentation or abstract it.',
     errorSeverity: ErrorSeverity.ERROR,
   );
 
-  /// Cria uma instância da regra [CoreNoFlutter].
+  /// Creates an instance of the [CoreNoFlutter] rule.
   const CoreNoFlutter() : super(code: _code);
 
-  /// Executa a análise para detectar imports de Flutter na camada core.
+  /// Runs the analysis to detect Flutter imports in the core layer.
   ///
-  /// Percorre todas as diretivas de import no arquivo atual e, se o arquivo
-  /// estiver na camada core, verifica se há imports de Flutter. Reporta um
-  /// erro se encontrar violações.
+  /// Traverses all import directives in the current file and, if the file
+  /// is in the core layer, checks for Flutter imports. Reports an
+  /// error if violations are found.
   @override
   void run(
     CustomLintResolver resolver,
@@ -74,7 +74,7 @@ class CoreNoFlutter extends DartLintRule {
     context.registry.addImportDirective((node) {
       final filePath = resolver.path;
 
-      // Verifica se o arquivo está na camada core
+      // Checks if the file is in the core layer
       if (!isInLayer(filePath, 'core')) {
         return;
       }
@@ -82,7 +82,7 @@ class CoreNoFlutter extends DartLintRule {
       final uri = node.uri.stringValue;
       if (uri == null) return;
 
-      // Verifica se é um import de Flutter
+      // Checks if it's a Flutter import
       if (isFlutterImport(uri)) {
          reporter.atNode(node, _code);
       }

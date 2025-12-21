@@ -1,25 +1,25 @@
-# Guia de Uso - clean_arch_lint
+# Usage Guide - clean_arch_lint
 
-Este guia mostra como usar o `clean_arch_lint` em seus projetos Flutter/Dart.
+This guide shows how to use `clean_arch_lint` in your Flutter/Dart projects.
 
-## Instalação
+## Installation
 
-### 1. Adicione as dependências no seu projeto
+### 1. Add dependencies to your project
 
-No arquivo `pubspec.yaml` do seu app Flutter:
+In your Flutter app's `pubspec.yaml` file:
 
 ```yaml
 dev_dependencies:
   custom_lint: ^0.8.1
   clean_arch_lint:
-    path: ../clean_arch_lint  # Ajuste o caminho conforme necessário
-    # Ou, quando publicado:
+    path: ../clean_arch_lint  # Adjust the path as needed
+    # Or, when published:
     # clean_arch_lint: ^1.0.0
 ```
 
-### 2. Configure o analyzer
+### 2. Configure the analyzer
 
-No arquivo `analysis_options.yaml`:
+In your `analysis_options.yaml` file:
 
 ```yaml
 analyzer:
@@ -27,88 +27,88 @@ analyzer:
     - custom_lint
 ```
 
-### 3. Execute o lint
+### 3. Run the lint
 
 ```bash
-# Execução única
+# Single execution
 dart run custom_lint
 
-# Modo watch (re-executa ao salvar arquivos)
+# Watch mode (re-executes when saving files)
 dart run custom_lint --watch
 ```
 
 ---
 
-## Estrutura de Camadas
+## Layer Structure
 
-O lint suporta duas estruturas de pastas:
+The lint supports two folder structures:
 
-### Estrutura 1: Direta (recomendada para projetos simples)
+### Structure 1: Direct (recommended for simple projects)
 ```
 lib/
- ├─ core/          # Lógica de negócio pura
+ ├─ core/          # Pure business logic
  │   ├─ entities/
  │   └─ usecases/
- ├─ data/          # Implementações técnicas
+ ├─ data/          # Technical implementations
  │   ├─ models/
  │   ├─ datasources/
  │   └─ repositories/
- └─ presentation/  # Interface do usuário
+ └─ presentation/  # User interface
      ├─ pages/
      ├─ widgets/
      └─ controllers/
 ```
 
-### Estrutura 2: Com `src/` (comum em projetos maiores)
+### Structure 2: With `src/` (common in larger projects)
 ```
 lib/
  └─ src/
-     ├─ core/          # Lógica de negócio pura
+     ├─ core/          # Pure business logic
      │   ├─ entities/
      │   └─ usecases/
-     ├─ data/          # Implementações técnicas
+     ├─ data/          # Technical implementations
      │   ├─ models/
      │   ├─ datasources/
      │   └─ repositories/
-     └─ presentation/  # Interface do usuário
+     └─ presentation/  # User interface
          ├─ pages/
          ├─ widgets/
          └─ controllers/
 ```
 
-**Nota:** O lint detecta automaticamente qual estrutura você está usando. Ambas são totalmente suportadas!
+**Note:** The lint automatically detects which structure you're using. Both are fully supported!
 
 ---
 
-## Regras de Lint
+## Lint Rules
 
 ### 1. core_no_flutter (ERROR)
 
-**O que faz:** Proíbe imports de Flutter na camada `core`.
+**What it does:** Prohibits Flutter imports in the `core` layer.
 
-**Bloqueios:**
+**Blocks:**
 - `package:flutter/*`
 - `package:flutter_test/*`
 - `dart:ui`
 
-**Por quê:** O core deve ser totalmente independente de UI, permitindo:
-- Testes unitários puros (sem depender do Flutter)
-- Reutilização da lógica em outras plataformas
-- Separação clara de responsabilidades
+**Why:** The core should be completely independent of UI, allowing:
+- Pure unit tests (without depending on Flutter)
+- Logic reusability on other platforms
+- Clear separation of concerns
 
-**Exemplo de violação:**
+**Violation example:**
 ```dart
-// ❌ ERRO em lib/core/entities/user.dart
+// ❌ Wrong - core/entities/user.dart
 import 'package:flutter/material.dart';
 
 class User {
-  final Color favoriteColor;  // Color é do Flutter!
+  final Color favoriteColor;  // Color is from Flutter!
 }
 ```
 
-**Solução:**
+**Solution:**
 ```dart
-// ✅ OK em lib/core/entities/user.dart
+// ✅ Correct - core/entities/user.dart
 class User {
   final int favoriteColorValue;  // Use int (0xFFRRGGBB)
 }
@@ -118,29 +118,29 @@ class User {
 
 ### 2. core_no_data_or_presentation (ERROR)
 
-**O que faz:** Proíbe o `core` de importar `data` ou `presentation`.
+**What it does:** Prohibits `core` from importing `data` or `presentation`.
 
-**Por quê:** O core é a camada mais interna. Dependências devem apontar **para dentro**, nunca para fora.
+**Why:** The core is the innermost layer. Dependencies should point **inward**, never outward.
 
-**Exemplo de violação:**
+**Violation example:**
 ```dart
-// ❌ ERRO em lib/core/usecases/get_user.dart
+// ❌ Wrong - core/usecases/get_user.dart
 import '../../data/repositories/user_repository_impl.dart';
 
 class GetUser {
-  final UserRepositoryImpl repository;  // Importa implementação!
+  final UserRepositoryImpl repository;  // Imports implementation!
 }
 ```
 
-**Solução:**
+**Solution:**
 ```dart
-// ✅ OK em lib/core/usecases/get_user.dart
+// ✅ Correct - core/usecases/get_user.dart
 abstract class UserRepository {
   Future<User?> getUser(String id);
 }
 
 class GetUser {
-  final UserRepository repository;  // Usa abstração!
+  final UserRepository repository;  // Uses abstraction!
   
   const GetUser(this.repository);
   
@@ -152,25 +152,25 @@ class GetUser {
 
 ### 3. data_no_presentation (ERROR)
 
-**O que faz:** Proíbe a camada `data` de importar `presentation`.
+**What it does:** Prohibits the `data` layer from importing `presentation`.
 
-**Por quê:** Data é infraestrutura, não deve conhecer a UI.
+**Why:** Data is infrastructure, should not know about the UI.
 
-**Exemplo de violação:**
+**Violation example:**
 ```dart
-// ❌ ERRO em lib/data/repositories/user_repository_impl.dart
+// ❌ Wrong - data/repositories/user_repository_impl.dart
 import '../../presentation/controllers/user_controller.dart';
 
 class UserRepositoryImpl {
   void notifyUI() {
-    UserController.instance.update();  // Acoplamento com UI!
+    UserController.instance.update();  // Coupling with UI!
   }
 }
 ```
 
-**Solução:**
+**Solution:**
 ```dart
-// ✅ OK - Use callbacks ou streams
+// ✅ Correct - Use callbacks or streams
 class UserRepositoryImpl {
   final void Function()? onDataChanged;
   
@@ -186,34 +186,34 @@ class UserRepositoryImpl {
 
 ### 4. presentation_no_data (WARNING)
 
-**O que faz:** Desencoraja `presentation` de importar `data` diretamente.
+**What it does:** Discourages `presentation` from directly importing `data`.
 
-**Severidade:** WARNING (configurável para ERROR)
+**Severity:** WARNING (configurable to ERROR)
 
-**Por quê:** A UI deve depender apenas de abstrações (core). As implementações devem ser injetadas via DI.
+**Why:** The UI should depend only on abstractions (core). Implementations should be injected via DI.
 
-**Exemplo de violação:**
+**Violation example:**
 ```dart
-// ⚠️ WARNING em lib/presentation/pages/user_page.dart
+// ⚠️ WARNING - presentation/pages/user_page.dart
 import '../../data/repositories/user_repository_impl.dart';
 
 class UserPage {
-  final repository = UserRepositoryImpl();  // Instancia diretamente!
+  final repository = UserRepositoryImpl();  // Directly instantiates!
 }
 ```
 
-**Solução:**
+**Solution:**
 ```dart
-// ✅ OK
+// ✅ Correct
 import '../../core/usecases/get_user.dart';
 
 class UserPage {
-  final GetUser getUser;  // Recebe abstração!
+  final GetUser getUser;  // Receives abstraction!
   
   const UserPage({required this.getUser});
 }
 
-// No arquivo de DI (ex: lib/core/di/injection.dart):
+// In DI file (e.g., lib/core/di/injection.dart):
 void setupDependencies() {
   getIt.registerFactory<GetUser>(
     () => GetUser(UserRepositoryImpl()),
@@ -223,11 +223,11 @@ void setupDependencies() {
 
 ---
 
-## Configuração Avançada
+## Advanced Configuration
 
-### Tornar presentation_no_data um ERROR
+### Make presentation_no_data an ERROR
 
-No `analysis_options.yaml`:
+In `analysis_options.yaml`:
 
 ```yaml
 custom_lint:
@@ -236,49 +236,49 @@ custom_lint:
         severity: error
 ```
 
-### Ignorar arquivos específicos
+### Ignore specific files
 
-Se você precisar ignorar uma regra em um arquivo específico:
+If you need to ignore a rule in a specific file:
 
 ```dart
 // ignore_for_file: core_no_flutter
 import 'package:flutter/material.dart';
 ```
 
-Ou ignore apenas uma linha:
+Or ignore just one line:
 
 ```dart
 // ignore: core_no_data_or_presentation
 import '../data/models/user_model.dart';
 ```
 
-**Atenção:** Use `ignore` apenas em casos excepcionais e documentados!
+**Attention:** Use `ignore` only in exceptional and documented cases!
 
 ---
 
-## Fluxo de Dependências Correto
+## Correct Dependency Flow
 
 ```
 ┌─────────────┐
-│Presentation │  ← Usuário interage
+│Presentation │  ← User interacts
 └──────┬──────┘
-       │ depende de
+       │ depends on
        ↓
 ┌─────────────┐
-│    Core     │  ← Usecases e Entidades
+│    Core     │  ← Usecases and Entities
 └──────┬──────┘
-       ↑ implementa
+       ↑ implements
        │
 ┌─────────────┐
-│    Data     │  ← Repositórios, APIs, DB
+│    Data     │  ← Repositories, APIs, DB
 └─────────────┘
 ```
 
-**Regra de ouro:** Dependências sempre apontam para dentro (para o core).
+**Golden rule:** Dependencies always point inward (toward the core).
 
 ---
 
-## Integração com CI/CD
+## CI/CD Integration
 
 ### GitHub Actions
 
@@ -307,45 +307,45 @@ jobs:
 
 ### "Plugin custom_lint not found"
 
-Execute:
+Run:
 ```bash
 dart pub get
 ```
 
-### "No lint issues found" mas há violações
+### "No lint issues found" but there are violations
 
-1. Verifique se `analysis_options.yaml` está configurado
-2. Certifique-se de que os arquivos estão em `lib/core/`, `lib/data/` ou `lib/presentation/`
-3. Execute `dart run custom_lint --watch` para ver em tempo real
+1. Check if `analysis_options.yaml` is configured
+2. Make sure files are in `lib/core/`, `lib/data/` or `lib/presentation/`
+3. Run `dart run custom_lint --watch` to see in real-time
 
-### Lint não detecta imports relativos
+### Lint not detecting relative imports
 
-O lint suporta tanto imports de pacote quanto relativos:
+The lint supports both package and relative imports:
 - `package:my_app/data/models/user.dart`
 - `../data/models/user.dart`
 
-Se um import não está sendo detectado, verifique se o caminho está correto.
+If an import is not being detected, check if the path is correct.
 
 ---
 
-## Melhores Práticas
+## Best Practices
 
-1. **Execute o lint frequentemente** - Preferencialmente no modo watch
-2. **Configure no CI** - Não deixe violações chegarem ao main
-3. **Eduque o time** - Explique o porquê das regras
-4. **Use DI** - Injeção de dependências é essencial para Clean Architecture
-5. **Abstraia no core** - Toda regra de negócio deve estar no core
+1. **Run lint frequently** - Preferably in watch mode
+2. **Configure in CI** - Don't let violations reach main
+3. **Educate the team** - Explain the why behind the rules
+4. **Use DI** - Dependency injection is essential for Clean Architecture
+5. **Abstract in core** - Every business rule should be in core
 
 ---
 
-## Exemplos Práticos
+## Practical Examples
 
-Veja o diretório `example/` para exemplos completos de:
-- ✅ Estrutura correta
-- ❌ Violações de cada regra
-- 🔧 Como corrigir cada tipo de erro
+See the `example/` directory for complete examples of:
+- ✅ Correct structure
+- ❌ Violations of each rule
+- 🔧 How to fix each type of error
 
-Execute:
+Run:
 ```bash
 cd example
 dart run clean_archt_lint_example.dart
@@ -353,7 +353,7 @@ dart run clean_archt_lint_example.dart
 
 ---
 
-## Suporte
+## Support
 
-Problemas ou dúvidas? Abra uma issue no repositório:
+Problems or questions? Open an issue in the repository:
 https://github.com/saulogatti/clean_arch_lint/issues

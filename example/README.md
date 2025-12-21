@@ -1,8 +1,8 @@
-# Exemplo de uso do clean_arch_lint
+# clean_arch_lint Usage Example
 
-Este exemplo demonstra como usar o `clean_arch_lint` para garantir a arquitetura limpa em projetos Flutter/Dart.
+This example demonstrates how to use `clean_arch_lint` to ensure clean architecture in Flutter/Dart projects.
 
-## Estrutura
+## Structure
 
 ```
 lib/
@@ -21,50 +21,50 @@ lib/
          └─ user_page.dart
 ```
 
-## Como testar os lints
+## How to Test the Lints
 
-1. Execute o exemplo para ver a estrutura correta:
+1. Run the example to see the correct structure:
    ```bash
    dart run clean_archt_lint_example.dart
    ```
 
-2. Para ver os lints em ação, descomente os imports nos arquivos:
-   - `lib/core/bad_example_flutter.dart` - Demonstra `core_no_flutter`
-   - `lib/core/bad_example_data.dart` - Demonstra `core_no_data_or_presentation`
-   - `lib/data/bad_example_presentation.dart` - Demonstra `data_no_presentation`
-   - `lib/presentation/bad_example_data.dart` - Demonstra `presentation_no_data`
+2. To see the lints in action, uncomment the imports in the files:
+   - `lib/core/bad_example_flutter.dart` - Demonstrates `core_no_flutter`
+   - `lib/core/bad_example_data.dart` - Demonstrates `core_no_data_or_presentation`
+   - `lib/data/bad_example_presentation.dart` - Demonstrates `data_no_presentation`
+   - `lib/presentation/bad_example_data.dart` - Demonstrates `presentation_no_data`
 
-3. Execute o custom_lint:
+3. Run custom_lint:
    ```bash
    dart run custom_lint
    ```
 
-## Regras demonstradas
+## Rules Demonstrated
 
-### ✅ Imports permitidos
+### ✅ Allowed imports
 
 - **core** → core
 - **data** → core, data
 - **presentation** → core, presentation
 
-### ❌ Imports proibidos
+### ❌ Prohibited imports
 
 - **core** → Flutter/UI (ERROR)
 - **core** → data, presentation (ERROR)
 - **data** → presentation (ERROR)
-- **presentation** → data (WARNING configurável para ERROR)
+- **presentation** → data (WARNING configurable to ERROR)
 
-## Arquitetura correta
+## Correct Architecture
 
 ```dart
 // Dependency Injection
 final GetUser getUser = UserRepositoryImpl();
 
-// Presentation recebe apenas o contrato do core
+// Presentation receives only the contract from core
 final userPage = UserPage(getUser: getUser);
 
-// Usa o usecase
+// Uses the usecase
 await userPage.loadUser('1');
 ```
 
-A presentation depende apenas da abstração (GetUser do core), e a implementação (UserRepositoryImpl do data) é injetada via DI.
+Presentation depends only on the abstraction (GetUser from core), and the implementation (UserRepositoryImpl from data) is injected via DI.

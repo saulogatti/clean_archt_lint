@@ -1,14 +1,14 @@
 # clean_arch_lint
 
-Lint customizado para **Flutter Clean Architecture**, focado em **enforce de camadas** usando análise estática (AST) com `custom_lint`.
+Custom lint for **Flutter Clean Architecture**, focused on **enforcing layers** using static analysis (AST) with `custom_lint`.
 
-Este package atua como um **guardião da arquitetura**: se uma camada depender de quem não deve, o erro aparece na hora.
+This package acts as an **architecture guardian**: if a layer depends on something it shouldn't, the error shows up immediately.
 
 ---
 
-## 🎯 Objetivo
+## 🎯 Objective
 
-Garantir que a estrutura abaixo seja respeitada automaticamente:
+Ensure the structure below is automatically respected:
 
 ```
 lib/
@@ -17,39 +17,39 @@ lib/
  └─ presentation/
 ```
 
-Sem discussão em PR. Sem “foi sem querer”. O lint resolve.
+No PR discussions. No "it was unintentional". The lint solves it.
 
 ---
 
-## 🧱 Conceito das camadas
+## 🧱 Layer Concepts
 
 ### core
 
-Camada pura, sem Flutter e sem infraestrutura.
+Pure layer, without Flutter and without infrastructure.
 
-Contém:
+Contains:
 
-- entidades
+- entities
 - usecases
-- contratos (interfaces)
-- regras de negócio
+- contracts (interfaces)
+- business rules
 
 ### data
 
-Implementações técnicas.
+Technical implementations.
 
-Contém:
+Contains:
 
 - datasources
 - models / DTOs
 - mappers
-- implementações de repositórios (`Impl`)
+- repository implementations (`Impl`)
 
 ### presentation
 
-Interface do usuário.
+User interface.
 
-Contém:
+Contains:
 
 - widgets
 - pages
@@ -58,71 +58,71 @@ Contém:
 
 ---
 
-## 🚨 Regras de lint
+## 🚨 Lint Rules
 
 ### 1️⃣ core\_no\_flutter (ERROR)
 
-❌ Proíbe imports de Flutter no `core`.
+❌ Prohibits Flutter imports in `core`.
 
-Bloqueia:
+Blocks:
 
 - `package:flutter/*`
 - `dart:ui`
 - `package:flutter_test/*`
 
-Motivo: Core precisa ser totalmente independente de UI.
+Reason: Core must be completely independent of UI.
 
 ---
 
 ### 2️⃣ core\_no\_data\_or\_presentation (ERROR)
 
-❌ Proíbe o `core` de depender de `data` ou `presentation`.
+❌ Prohibits `core` from depending on `data` or `presentation`.
 
-Regra de ouro da Clean Architecture:
+Clean Architecture golden rule:
 
-> Dependências sempre apontam para dentro.
+> Dependencies always point inward.
 
 ---
 
 ### 3️⃣ data\_no\_presentation (ERROR)
 
-❌ `data` não pode importar nada de `presentation`.
+❌ `data` cannot import anything from `presentation`.
 
-Motivo:
+Reason:
 
-- Evita acoplamento de infraestrutura com UI
-- Garante testabilidade
-
----
-
-### 4️⃣ presentation\_no\_data (WARNING configurável)
-
-⚠️ Por padrão, `presentation` **não deve depender diretamente de `data`**.
-
-✔️ Usecases e contratos devem vir do `core`.
-
-Essa regra pode ser configurada para **ERROR**.
+- Avoids coupling infrastructure with UI
+- Ensures testability
 
 ---
 
-## 📦 Instalação
+### 4️⃣ presentation\_no\_data (WARNING configurable)
 
-### 1) Adicione as dependências no app Flutter
+⚠️ By default, `presentation` **should not depend directly on `data`**.
+
+✔️ Usecases and contracts should come from `core`.
+
+This rule can be configured to **ERROR**.
+
+---
+
+## 📦 Installation
+
+### 1) Add dependencies to your Flutter app
 
 ```yaml
 dev_dependencies:
   custom_lint: ^0.8.1
   clean_arch_lint:
     path: ../clean_arch_lint
-    # Ou, quando publicado:
+    # Or, when published:
     # clean_arch_lint: ^1.0.0
 ```
 
-> Ajuste o `path` conforme sua estrutura de repositórios.
+> Adjust the `path` according to your repository structure.
 
 ---
 
-### 2) Habilite o plugin no `analysis_options.yaml`
+### 2) Enable the plugin in `analysis_options.yaml`
 
 ```yaml
 analyzer:
@@ -132,26 +132,26 @@ analyzer:
 
 ---
 
-## ▶️ Como rodar
+## ▶️ How to Run
 
 ```bash
-# Execução única
+# Single execution
 dart run custom_lint
 
-# Modo watch (re-executa ao salvar arquivos)
+# Watch mode (re-executes when saving files)
 dart run custom_lint --watch
 ```
 
-No VSCode / Android Studio:
+In VSCode / Android Studio:
 
-- Os erros aparecem automaticamente no editor
-- Funciona em tempo real enquanto você digita
+- Errors appear automatically in the editor
+- Works in real-time as you type
 
 ---
 
-## ⚙️ Configuração
+## ⚙️ Configuration
 
-### Tornar `presentation_no_data` um ERROR
+### Make `presentation_no_data` an ERROR
 
 ```yaml
 custom_lint:
@@ -162,7 +162,7 @@ custom_lint:
 
 ---
 
-### Ignorar paths específicos (exemplo)
+### Ignore specific paths (example)
 
 ```yaml
 custom_lint:
@@ -172,79 +172,79 @@ custom_lint:
           - lib/core/di/**
 ```
 
-Útil para casos muito específicos como bootstrap de DI.
+Useful for very specific cases like DI bootstrap.
 
 ---
 
-## ✅ Exemplos
+## ✅ Examples
 
-### Import permitido
+### Allowed import
 
 ```dart
 import 'package:my_app/core/usecases/get_user.dart';
 ```
 
-### Import proibido (core → flutter)
+### Prohibited import (core → flutter)
 
 ```dart
-import 'package:flutter/material.dart'; // ❌ erro
+import 'package:flutter/material.dart'; // ❌ error
 ```
 
-### Import proibido (presentation → data)
+### Prohibited import (presentation → data)
 
 ```dart
-import 'package:my_app/data/user_repository_impl.dart'; // ⚠️ ou ❌
+import 'package:my_app/data/user_repository_impl.dart'; // ⚠️ or ❌
 ```
 
 ---
 
-## 🧠 Boas práticas recomendadas
+## 🧠 Recommended Best Practices
 
-- Interfaces sempre no `core`
-- Implementações sempre no `data`
-- UI depende apenas de abstrações
-- Injeção de dependência resolve o resto
-
----
-
-## ❌ O que este lint NÃO faz
-
-- Não gera código
-- Não corrige automaticamente
-- Não substitui code review
-
-Ele apenas aponta o erro antes de virar dívida técnica.
+- Interfaces always in `core`
+- Implementations always in `data`
+- UI depends only on abstractions
+- Dependency injection resolves the rest
 
 ---
 
-## 🧩 Stack técnica
+## ❌ What This Lint Does NOT Do
+
+- Does not generate code
+- Does not automatically fix
+- Does not replace code review
+
+It only points out the error before it becomes technical debt.
+
+---
+
+## 🧩 Technical Stack
 
 - Dart SDK >= 3.0
 - analyzer
 - custom\_lint\_builder
 - path
 
-Sem `build_runner`. Sem `source_gen`.
+No `build_runner`. No `source_gen`.
 
 ---
 
-## 🏁 Resumo rápido
+## 🏁 Quick Summary
 
-| Camada       | Pode depender de   |
+| Layer        | Can depend on      |
 | ------------ | ------------------ |
-| core         | core apenas         |
+| core         | core only          |
 | data         | core, data         |
 | presentation | core, presentation |
 
-Se passar disso, o lint apita.
+If it goes beyond that, the lint alerts.
 
 ---
 
-## 📁 Estruturas Suportadas
+## 📁 Supported Structures
 
-O lint suporta automaticamente duas estruturas de pastas:
+The lint automatically supports two folder structures:
 
-### Estrutura 1: Direta (projetos simples)
+### Structure 1: Direct (simple projects)
 ```
 lib/
  ├─ core/
@@ -252,7 +252,7 @@ lib/
  └─ presentation/
 ```
 
-### Estrutura 2: Com `src/` (projetos maiores)
+### Structure 2: With `src/` (larger projects)
 ```
 lib/
  └─ src/
@@ -261,9 +261,8 @@ lib/
      └─ presentation/
 ```
 
-**Não é necessária configuração adicional** - o lint detecta automaticamente qual estrutura você está usando!
+**No additional configuration needed** - the lint automatically detects which structure you're using!
 
 ---
 
-Arquitetura limpa não é opinião. É contrato.
-
+Clean architecture is not an opinion. It's a contract.
