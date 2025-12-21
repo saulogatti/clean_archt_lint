@@ -61,7 +61,7 @@ class CoreNoDataOrPresentation extends DartLintRule {
     problemMessage: 'Core cannot depend on Data or Presentation.',
     correctionMessage:
         'Define contracts in Core and implement in Data. The UI consumes only Core.',
-    errorSeverity: ErrorSeverity.ERROR,
+    errorSeverity: ErrorSeverity.WARNING,
   );
 
   /// Creates an instance of the [CoreNoDataOrPresentation] rule.

@@ -60,7 +60,7 @@ class DataNoPresentation extends DartLintRule {
     name: 'data_no_presentation',
     problemMessage: 'Data cannot depend on Presentation.',
     correctionMessage: 'Move contracts to Core and inject dependencies.',
-    errorSeverity: ErrorSeverity.ERROR,
+    errorSeverity: ErrorSeverity.WARNING,
   );
 
   /// Creates an instance of the [DataNoPresentation] rule.

@@ -40,7 +40,7 @@ import '../utils/import_resolver.dart';
 ///
 /// class UserController {
 ///   final UserRepositoryImpl repository; // Knows concrete implementation
-///   
+///
 ///   UserController() : repository = UserRepositoryImpl(); // Direct coupling
 /// }
 /// ```
@@ -54,7 +54,7 @@ import '../utils/import_resolver.dart';
 ///
 /// class UserController {
 ///   final GetUser getUser; // Depends on core usecase
-///   
+///
 ///   UserController(this.getUser); // Implementation injected
 /// }
 ///

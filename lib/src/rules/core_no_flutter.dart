@@ -54,7 +54,7 @@ class CoreNoFlutter extends DartLintRule {
     name: 'core_no_flutter',
     problemMessage: 'Core cannot depend on Flutter/UI.',
     correctionMessage: 'Move this code to presentation or abstract it.',
-    errorSeverity: ErrorSeverity.ERROR,
+    errorSeverity: ErrorSeverity.WARNING,
   );
 
   /// Creates an instance of the [CoreNoFlutter] rule.
@@ -84,7 +84,7 @@ class CoreNoFlutter extends DartLintRule {
 
       // Checks if it's a Flutter import
       if (isFlutterImport(uri)) {
-         reporter.atNode(node, _code);
+        reporter.atNode(node, _code);
       }
     });
   }
