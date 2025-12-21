@@ -54,40 +54,40 @@
 
     
 <section class="desc markdown">
-  <p>Regra de lint que proíbe imports de Flutter na camada core.</p>
-<p>A camada core deve ser totalmente independente de UI e frameworks,
-contendo apenas lógica de negócio pura. Esta regra garante que nenhum
-código da camada core importe bibliotecas Flutter ou relacionadas a UI.</p>
-<h2 id="severidade">Severidade</h2>
-<p>ERROR - Viola o princípio fundamental da Clean Architecture</p>
-<h2 id="imports-bloqueados">Imports bloqueados</h2>
+  <p>Lint rule that prohibits Flutter imports in the core layer.</p>
+<p>The core layer should be completely independent of UI and frameworks,
+containing only pure business logic. This rule ensures that no
+code in the core layer imports Flutter or UI-related libraries.</p>
+<h2 id="severity">Severity</h2>
+<p>ERROR - Violates the fundamental principle of Clean Architecture</p>
+<h2 id="blocked-imports">Blocked imports</h2>
 <ul>
-<li><code>package:flutter/...</code> (todos os imports do Flutter)</li>
-<li><code>package:flutter_test/...</code> (biblioteca de testes do Flutter)</li>
-<li><code>dart:ui</code> (biblioteca de UI do Dart usada pelo Flutter)</li>
+<li><code>package:flutter/...</code> (all Flutter imports)</li>
+<li><code>package:flutter_test/...</code> (Flutter test library)</li>
+<li><code>dart:ui</code> (Dart UI library used by Flutter)</li>
 </ul>
-<h2 id="exemplo-de-violao">Exemplo de violação</h2>
-<pre class="language-dart"><code class="language-dart">// ❌ Errado - core/usecases/get_user.dart
+<h2 id="violation-example">Violation example</h2>
+<pre class="language-dart"><code class="language-dart">// ❌ Wrong - core/usecases/get_user.dart
 import 'package:flutter/material.dart';
 
 class GetUser {
-  Widget buildWidget() =&gt; Container(); // Não deve ter UI no core
+  Widget buildWidget() =&gt; Container(); // Should not have UI in core
 }
 </code></pre>
-<h2 id="soluo">Solução</h2>
-<pre class="language-dart"><code class="language-dart">// ✅ Correto - core/usecases/get_user.dart
+<h2 id="solution">Solution</h2>
+<pre class="language-dart"><code class="language-dart">// ✅ Correct - core/usecases/get_user.dart
 class GetUser {
   User call(String id) {
-    // Apenas lógica de negócio pura
+    // Only pure business logic
   }
 }
 
-// ✅ Correto - presentation/widgets/user_widget.dart
+// ✅ Correct - presentation/widgets/user_widget.dart
 import 'package:flutter/material.dart';
 import 'package:my_app/core/usecases/get_user.dart';
 
 class UserWidget extends StatelessWidget {
-  // UI na camada correta
+  // UI in the correct layer
 }
 </code></pre>
 </section>
@@ -125,7 +125,7 @@ class UserWidget extends StatelessWidget {
           <span class="name"><a href="../clean_arch_lint/CoreNoFlutter/CoreNoFlutter.html">CoreNoFlutter</a></span><span class="signature">()</span>
         </dt>
         <dd>
-          Cria uma instância da regra <a href="../clean_arch_lint/CoreNoFlutter-class.html">CoreNoFlutter</a>.
+          Creates an instance of the <a href="../clean_arch_lint/CoreNoFlutter-class.html">CoreNoFlutter</a> rule.
             <div class="constructor-modifier features">const</div>
         </dd>
     </dl>
@@ -252,7 +252,7 @@ class UserWidget extends StatelessWidget {
 
 </dt>
 <dd>
-  Executa a análise para detectar imports de Flutter na camada core.
+  Runs the analysis to detect Flutter imports in the core layer.
   <div class="features"><span class="feature">override</span></div>
 
 </dd>
@@ -359,7 +359,7 @@ class UserWidget extends StatelessWidget {
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

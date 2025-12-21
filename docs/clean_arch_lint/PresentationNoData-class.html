@@ -54,50 +54,50 @@
 
     
 <section class="desc markdown">
-  <p>Regra de lint que desencoraja a camada presentation de depender de data.</p>
-<p>A camada presentation deve depender apenas do core (usecases e contratos).
-As implementações concretas devem ser injetadas via dependency injection,
-respeitando o princípio da inversão de dependência.</p>
-<h2 id="severidade">Severidade</h2>
-<p>WARNING (padrão) - Pode ser configurado para ERROR via <code>analysis_options.yaml</code></p>
-<h2 id="regra-de-dependncia">Regra de dependência</h2>
+  <p>Lint rule that discourages the presentation layer from depending on data.</p>
+<p>The presentation layer should depend only on core (usecases and contracts).
+Concrete implementations should be injected via dependency injection,
+respecting the dependency inversion principle.</p>
+<h2 id="severity">Severity</h2>
+<p>WARNING (default) - Can be configured to ERROR via <code>analysis_options.yaml</code></p>
+<h2 id="dependency-rule">Dependency rule</h2>
 <pre class="language-dart"><code>presentation → core ← data
 </code></pre>
-<p>Presentation não deve conhecer implementações concretas da camada data.</p>
-<h2 id="configurao">Configuração</h2>
-<p>Para transformar em ERROR, adicione em <code>analysis_options.yaml</code>:</p>
+<p>Presentation should not know concrete implementations from the data layer.</p>
+<h2 id="configuration">Configuration</h2>
+<p>To transform into ERROR, add to <code>analysis_options.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml">analyzer:
   errors:
     presentation_no_data: error
 </code></pre>
-<h2 id="exemplo-de-violao">Exemplo de violação</h2>
-<pre class="language-dart"><code class="language-dart">// ⚠️ Alerta - presentation/controllers/user_controller.dart
+<h2 id="violation-example">Violation example</h2>
+<pre class="language-dart"><code class="language-dart">// ⚠️ Warning - presentation/controllers/user_controller.dart
 import 'package:my_app/data/repositories/user_repository_impl.dart';
 
 class UserController {
-  final UserRepositoryImpl repository; // Conhece implementação concreta
-  
-  UserController() : repository = UserRepositoryImpl(); // Acoplamento direto
+  final UserRepositoryImpl repository; // Knows concrete implementation
+
+  UserController() : repository = UserRepositoryImpl(); // Direct coupling
 }
 </code></pre>
-<h2 id="soluo">Solução</h2>
-<pre class="language-dart"><code class="language-dart">// ✅ Correto - presentation/controllers/user_controller.dart
+<h2 id="solution">Solution</h2>
+<pre class="language-dart"><code class="language-dart">// ✅ Correct - presentation/controllers/user_controller.dart
 import 'package:my_app/core/contracts/user_repository.dart';
 import 'package:my_app/core/usecases/get_user.dart';
 
 class UserController {
-  final GetUser getUser; // Depende do usecase do core
-  
-  UserController(this.getUser); // Implementação injetada
+  final GetUser getUser; // Depends on core usecase
+
+  UserController(this.getUser); // Implementation injected
 }
 
-// ✅ Correto - main.dart (ou DI container)
+// ✅ Correct - main.dart (or DI container)
 import 'package:my_app/data/repositories/user_repository_impl.dart';
 
 void main() {
   final repository = UserRepositoryImpl();
   final getUser = GetUser(repository);
-  final controller = UserController(getUser); // Injeção de dependência
+  final controller = UserController(getUser); // Dependency injection
 }
 </code></pre>
 </section>
@@ -135,7 +135,7 @@ void main() {
           <span class="name"><a href="../clean_arch_lint/PresentationNoData/PresentationNoData.html">PresentationNoData</a></span><span class="signature">()</span>
         </dt>
         <dd>
-          Cria uma instância da regra <a href="../clean_arch_lint/PresentationNoData-class.html">PresentationNoData</a>.
+          Creates an instance of the <a href="../clean_arch_lint/PresentationNoData-class.html">PresentationNoData</a> rule.
             <div class="constructor-modifier features">const</div>
         </dd>
     </dl>
@@ -262,7 +262,7 @@ void main() {
 
 </dt>
 <dd>
-  Executa a análise para detectar dependências diretas de data na presentation.
+  Runs the analysis to detect direct data dependencies in presentation.
   <div class="features"><span class="feature">override</span></div>
 
 </dd>
@@ -369,7 +369,7 @@ void main() {
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

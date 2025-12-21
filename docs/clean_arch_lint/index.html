@@ -60,23 +60,23 @@
 
     
 <section class="desc markdown">
-  <p>Plugin de lint customizado para enforçar regras de Flutter Clean Architecture.</p>
-<p>Este plugin garante o isolamento correto entre as camadas através de
-análise estática (AST), impedindo dependências indevidas entre:</p>
+  <p>Custom lint plugin for enforcing Flutter Clean Architecture rules.</p>
+<p>This plugin ensures proper isolation between layers through
+static analysis (AST), preventing unwanted dependencies between:</p>
 <ul>
-<li><strong>core</strong>: lógica de negócio pura, sem dependências de UI ou infraestrutura</li>
-<li><strong>data</strong>: implementações técnicas e infraestrutura (APIs, banco de dados)</li>
-<li><strong>presentation</strong>: interface do usuário e componentes visuais</li>
+<li><strong>core</strong>: pure business logic, without UI or infrastructure dependencies</li>
+<li><strong>data</strong>: technical implementations and infrastructure (APIs, database)</li>
+<li><strong>presentation</strong>: user interface and visual components</li>
 </ul>
-<h2 id="regras-implementadas">Regras implementadas</h2>
+<h2 id="implemented-rules">Implemented rules</h2>
 <ul>
-<li><a href="../clean_arch_lint/CoreNoFlutter-class.html">CoreNoFlutter</a>: Impede que a camada core importe Flutter/UI</li>
-<li><a href="../clean_arch_lint/CoreNoDataOrPresentation-class.html">CoreNoDataOrPresentation</a>: Impede que core dependa de data ou presentation</li>
-<li><a href="../clean_arch_lint/DataNoPresentation-class.html">DataNoPresentation</a>: Impede que data dependa de presentation</li>
-<li><a href="../clean_arch_lint/PresentationNoData-class.html">PresentationNoData</a>: Alerta quando presentation depende diretamente de data</li>
+<li><a href="../clean_arch_lint/CoreNoFlutter-class.html">CoreNoFlutter</a>: Prevents core layer from importing Flutter/UI</li>
+<li><a href="../clean_arch_lint/CoreNoDataOrPresentation-class.html">CoreNoDataOrPresentation</a>: Prevents core from depending on data or presentation</li>
+<li><a href="../clean_arch_lint/DataNoPresentation-class.html">DataNoPresentation</a>: Prevents data from depending on presentation</li>
+<li><a href="../clean_arch_lint/PresentationNoData-class.html">PresentationNoData</a>: Warns when presentation directly depends on data</li>
 </ul>
-<h2 id="exemplo-de-uso">Exemplo de uso</h2>
-<p>Adicione ao <code>analysis_options.yaml</code>:</p>
+<h2 id="usage-example">Usage example</h2>
+<p>Add to <code>analysis_options.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml">analyzer:
   plugins:
     - custom_lint
@@ -88,10 +88,10 @@ custom_lint:
     - data_no_presentation
     - presentation_no_data
 </code></pre>
-<p>Para personalizar a severidade de uma regra:</p>
+<p>To customize a rule's severity:</p>
 <pre class="language-yaml"><code class="language-yaml">analyzer:
   errors:
-    presentation_no_data: error  # Transforma WARNING em ERROR
+    presentation_no_data: error  # Transforms WARNING into ERROR
 </code></pre>
 </section>
 
@@ -104,7 +104,7 @@ custom_lint:
 
 </dt>
 <dd>
-  Regra de lint que proíbe a camada core de depender de data ou presentation.
+  Lint rule that prohibits the core layer from depending on data or presentation.
 </dd>
 
           <dt id="CoreNoFlutter">
@@ -112,7 +112,7 @@ custom_lint:
 
 </dt>
 <dd>
-  Regra de lint que proíbe imports de Flutter na camada core.
+  Lint rule that prohibits Flutter imports in the core layer.
 </dd>
 
           <dt id="DataNoPresentation">
@@ -120,7 +120,7 @@ custom_lint:
 
 </dt>
 <dd>
-  Regra de lint que proíbe a camada data de depender de presentation.
+  Lint rule that prohibits the data layer from depending on presentation.
 </dd>
 
           <dt id="PresentationNoData">
@@ -128,7 +128,7 @@ custom_lint:
 
 </dt>
 <dd>
-  Regra de lint que desencoraja a camada presentation de depender de data.
+  Lint rule that discourages the presentation layer from depending on data.
 </dd>
 
       </dl>
@@ -151,7 +151,7 @@ custom_lint:
 
 </dt>
 <dd>
-  Cria e retorna a instância do plugin de lint para Clean Architecture.
+  Creates and returns the lint plugin instance for Clean Architecture.
   
 
 </dd>
@@ -187,7 +187,7 @@ custom_lint:
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

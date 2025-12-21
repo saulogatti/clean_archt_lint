@@ -70,10 +70,10 @@
     </section>
     
 <section class="desc markdown">
-  <p>Executa a análise para detectar imports de Flutter na camada core.</p>
-<p>Percorre todas as diretivas de import no arquivo atual e, se o arquivo
-estiver na camada core, verifica se há imports de Flutter. Reporta um
-erro se encontrar violações.</p>
+  <p>Runs the analysis to detect Flutter imports in the core layer.</p>
+<p>Traverses all import directives in the current file and, if the file
+is in the core layer, checks for Flutter imports. Reports an
+error if violations are found.</p>
 </section>
 
 
@@ -89,7 +89,7 @@ void run(
   context.registry.addImportDirective((node) {
     final filePath = resolver.path;
 
-    &#47;&#47; Verifica se o arquivo está na camada core
+    &#47;&#47; Checks if the file is in the core layer
     if (!isInLayer(filePath, &#39;core&#39;)) {
       return;
     }
@@ -97,9 +97,9 @@ void run(
     final uri = node.uri.stringValue;
     if (uri == null) return;
 
-    &#47;&#47; Verifica se é um import de Flutter
+    &#47;&#47; Checks if it&#39;s a Flutter import
     if (isFlutterImport(uri)) {
-       reporter.atNode(node, _code);
+      reporter.atNode(node, _code);
     }
   });
 }</code></pre>
@@ -130,7 +130,7 @@ void run(
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

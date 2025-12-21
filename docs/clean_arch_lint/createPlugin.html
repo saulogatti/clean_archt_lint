@@ -62,16 +62,16 @@
     </section>
     
 <section class="desc markdown">
-  <p>Cria e retorna a instância do plugin de lint para Clean Architecture.</p>
-<p>Esta função é chamada automaticamente pelo framework <code>custom_lint_builder</code>
-durante a inicialização do analisador. Não deve ser chamada manualmente.</p>
-<p>Retorna um <a href="https://pub.dev/documentation/custom_lint_core/0.8.1/custom_lint_core/PluginBase-class.html">PluginBase</a> que registra todas as regras de lint implementadas.
-/// ## Regras implementadas</p>
+  <p>Creates and returns the lint plugin instance for Clean Architecture.</p>
+<p>This function is automatically called by the <code>custom_lint_builder</code>
+framework during analyzer initialization. Should not be called manually.</p>
+<p>Returns a <a href="https://pub.dev/documentation/custom_lint_core/0.8.1/custom_lint_core/PluginBase-class.html">PluginBase</a> that registers all implemented lint rules.
+/// ## Implemented rules</p>
 <ul>
-<li><a href="../clean_arch_lint/CoreNoFlutter-class.html">CoreNoFlutter</a>: Impede que a camada core importe Flutter/UI</li>
-<li><a href="../clean_arch_lint/CoreNoDataOrPresentation-class.html">CoreNoDataOrPresentation</a>: Impede que core dependa de data ou presentation</li>
-<li><a href="../clean_arch_lint/DataNoPresentation-class.html">DataNoPresentation</a>: Impede que data dependa de presentation</li>
-<li><a href="../clean_arch_lint/PresentationNoData-class.html">PresentationNoData</a>: Alerta quando presentation depende diretamente de data</li>
+<li><a href="../clean_arch_lint/CoreNoFlutter-class.html">CoreNoFlutter</a>: Prevents core layer from importing Flutter/UI</li>
+<li><a href="../clean_arch_lint/CoreNoDataOrPresentation-class.html">CoreNoDataOrPresentation</a>: Prevents core from depending on data or presentation</li>
+<li><a href="../clean_arch_lint/DataNoPresentation-class.html">DataNoPresentation</a>: Prevents data from depending on presentation</li>
+<li><a href="../clean_arch_lint/PresentationNoData-class.html">PresentationNoData</a>: Warns when presentation directly depends on data</li>
 </ul>
 </section>
 
@@ -106,7 +106,7 @@ durante a inicialização do analisador. Não deve ser chamada manualmente.</p>
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

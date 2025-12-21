@@ -70,11 +70,11 @@
     </section>
     
 <section class="desc markdown">
-  <p>Executa a análise para detectar dependências diretas de data na presentation.</p>
-<p>Percorre todas as diretivas de import no arquivo atual e, se o arquivo
-estiver na camada presentation, resolve cada import e verifica se aponta
-para a camada data. Reporta um warning (ou error, se configurado) se
-encontrar violações.</p>
+  <p>Runs the analysis to detect direct data dependencies in presentation.</p>
+<p>Traverses all import directives in the current file and, if the file
+is in the presentation layer, resolves each import and checks if it points
+to the data layer. Reports a warning (or error, if configured) if
+violations are found.</p>
 </section>
 
 
@@ -90,7 +90,7 @@ void run(
   context.registry.addImportDirective((node) {
     final filePath = resolver.path;
 
-    &#47;&#47; Verifica se o arquivo está na camada presentation
+    &#47;&#47; Checks if the file is in the presentation layer
     if (!isInLayer(filePath, &#39;presentation&#39;)) {
       return;
     }
@@ -98,13 +98,13 @@ void run(
     final uri = node.uri.stringValue;
     if (uri == null) return;
 
-    &#47;&#47; Ignora imports dart: e de pacotes externos
+    &#47;&#47; Ignores dart: imports and external packages
     if (uri.startsWith(&#39;dart:&#39;) ||
         (uri.startsWith(&#39;package:&#39;) &amp;&amp; uri.contains(&#39;&#47;presentation&#47;&#39;))) {
       return;
     }
 
-    &#47;&#47; Resolve o import usando as funções utilitárias
+    &#47;&#47; Resolves the import using utility functions
     final sourceFilePath = resolver.source.uri.toFilePath();
     final projectRoot = extractProjectRoot(sourceFilePath);
     final packageName = extractPackageName(uri);
@@ -118,7 +118,7 @@ void run(
 
     if (resolved == null) return;
 
-    &#47;&#47; Verifica se importa de data
+    &#47;&#47; Checks if it imports from data
     if (importsFromLayer(resolved.resolvedPath, &#39;data&#39;)) {
       reporter.atNode(node, _code);
     }
@@ -151,7 +151,7 @@ void run(
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

@@ -70,10 +70,10 @@
     </section>
     
 <section class="desc markdown">
-  <p>Executa a análise para detectar dependências indevidas do core.</p>
-<p>Percorre todas as diretivas de import no arquivo atual e, se o arquivo
-estiver na camada core, resolve cada import e verifica se aponta para
-as camadas data ou presentation. Reporta um erro se encontrar violações.</p>
+  <p>Runs the analysis to detect unwanted dependencies from core.</p>
+<p>Traverses all import directives in the current file and, if the file
+is in the core layer, resolves each import and checks if it points to
+the data or presentation layers. Reports an error if violations are found.</p>
 </section>
 
 
@@ -89,7 +89,7 @@ void run(
   context.registry.addImportDirective((node) {
     final filePath = resolver.path;
 
-    &#47;&#47; Verifica se o arquivo está na camada core
+    &#47;&#47; Checks if the file is in the core layer
     if (!isInLayer(filePath, &#39;core&#39;)) {
       return;
     }
@@ -97,13 +97,13 @@ void run(
     final uri = node.uri.stringValue;
     if (uri == null) return;
 
-    &#47;&#47; Ignora imports dart: e de pacotes que sejam do próprio core
+    &#47;&#47; Ignores dart: imports and packages that are from core itself
     if (uri.startsWith(&#39;dart:&#39;) ||
         (uri.startsWith(&#39;package:&#39;) &amp;&amp; uri.contains(&#39;&#47;core&#47;&#39;))) {
       return;
     }
 
-    &#47;&#47; Resolve o import usando as funções utilitárias
+    &#47;&#47; Resolves the import using utility functions
     final sourceFilePath = resolver.source.uri.toFilePath();
     final projectRoot = extractProjectRoot(sourceFilePath);
     final packageName = extractPackageName(uri);
@@ -117,7 +117,7 @@ void run(
 
     if (resolved == null) return;
 
-    &#47;&#47; Verifica se importa de data ou presentation
+    &#47;&#47; Checks if it imports from data or presentation
     if (importsFromLayer(resolved.resolvedPath, &#39;data&#39;) ||
         importsFromLayer(resolved.resolvedPath, &#39;presentation&#39;)) {
       reporter.atNode(node, _code);
@@ -151,7 +151,7 @@ void run(
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

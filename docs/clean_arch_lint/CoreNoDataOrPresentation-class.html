@@ -54,42 +54,42 @@
 
     
 <section class="desc markdown">
-  <p>Regra de lint que proíbe a camada core de depender de data ou presentation.</p>
-<p>O core deve ser a camada mais interna da arquitetura, contendo apenas
-lógica de negócio pura e contratos (interfaces). Não pode ter dependências
-de implementações técnicas (data) ou de UI (presentation).</p>
-<h2 id="severidade">Severidade</h2>
-<p>ERROR - Viola o princípio da Clean Architecture (inversão de dependência)</p>
-<h2 id="regra-de-dependncia">Regra de dependência</h2>
+  <p>Lint rule that prohibits the core layer from depending on data or presentation.</p>
+<p>The core should be the innermost layer of the architecture, containing only
+pure business logic and contracts (interfaces). It cannot have dependencies
+on technical implementations (data) or UI (presentation).</p>
+<h2 id="severity">Severity</h2>
+<p>ERROR - Violates the Clean Architecture principle (dependency inversion)</p>
+<h2 id="dependency-rule">Dependency rule</h2>
 <pre class="language-dart"><code>presentation → core ← data
 </code></pre>
-<p>O core define os contratos, e as camadas externas implementam.</p>
-<h2 id="exemplo-de-violao">Exemplo de violação</h2>
-<pre class="language-dart"><code class="language-dart">// ❌ Errado - core/usecases/get_user.dart
+<p>The core defines the contracts, and the outer layers implement them.</p>
+<h2 id="violation-example">Violation example</h2>
+<pre class="language-dart"><code class="language-dart">// ❌ Wrong - core/usecases/get_user.dart
 import 'package:my_app/data/repositories/user_repository_impl.dart';
 
 class GetUser {
-  final UserRepositoryImpl repository; // Não deve conhecer implementação
+  final UserRepositoryImpl repository; // Should not know implementation
 }
 </code></pre>
-<h2 id="soluo">Solução</h2>
-<pre class="language-dart"><code class="language-dart">// ✅ Correto - core/contracts/user_repository.dart
+<h2 id="solution">Solution</h2>
+<pre class="language-dart"><code class="language-dart">// ✅ Correct - core/contracts/user_repository.dart
 abstract class UserRepository {
   Future&lt;User&gt; getUser(String id);
 }
 
-// ✅ Correto - core/usecases/get_user.dart
+// ✅ Correct - core/usecases/get_user.dart
 import 'package:my_app/core/contracts/user_repository.dart';
 
 class GetUser {
-  final UserRepository repository; // Depende apenas do contrato
+  final UserRepository repository; // Depends only on the contract
 }
 
-// ✅ Correto - data/repositories/user_repository_impl.dart
+// ✅ Correct - data/repositories/user_repository_impl.dart
 import 'package:my_app/core/contracts/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  // Implementação técnica na camada data
+  // Technical implementation in the data layer
 }
 </code></pre>
 </section>
@@ -127,7 +127,7 @@ class UserRepositoryImpl implements UserRepository {
           <span class="name"><a href="../clean_arch_lint/CoreNoDataOrPresentation/CoreNoDataOrPresentation.html">CoreNoDataOrPresentation</a></span><span class="signature">()</span>
         </dt>
         <dd>
-          Cria uma instância da regra <a href="../clean_arch_lint/CoreNoDataOrPresentation-class.html">CoreNoDataOrPresentation</a>.
+          Creates an instance of the <a href="../clean_arch_lint/CoreNoDataOrPresentation-class.html">CoreNoDataOrPresentation</a> rule.
             <div class="constructor-modifier features">const</div>
         </dd>
     </dl>
@@ -254,7 +254,7 @@ class UserRepositoryImpl implements UserRepository {
 
 </dt>
 <dd>
-  Executa a análise para detectar dependências indevidas do core.
+  Runs the analysis to detect unwanted dependencies from core.
   <div class="features"><span class="feature">override</span></div>
 
 </dd>
@@ -361,7 +361,7 @@ class UserRepositoryImpl implements UserRepository {
 <footer>
   <span class="no-break">
     clean_arch_lint
-      1.0.0
+      1.1.0
   </span>
   
 </footer>

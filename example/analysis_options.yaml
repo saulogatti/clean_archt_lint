@@ -1,14 +1,16 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  errors:
+    dangling_library_doc_comments: ignore
+    unused_import: ignore
   plugins:
     - custom_lint
-
 # custom_lint:
 #   debug: true
 #   verbose: true
 # Configuração opcional para tornar presentation_no_data um ERROR
 # custom_lint:
-#   rules:
-#     - presentation_no_data:
-#         severity: error
+#   errors:
+#     presentation_no_data: error
+
