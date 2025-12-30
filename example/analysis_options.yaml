@@ -1,16 +1,10 @@
-include: package:flutter_lints/flutter.yaml
+include:
+  - package:flutter_lints/flutter.yaml
 
 analyzer:
-  errors:
-    dangling_library_doc_comments: ignore
-    unused_import: ignore
   plugins:
-    - custom_lint
-# custom_lint:
-#   debug: true
-#   verbose: true
-# Configuração opcional para tornar presentation_no_data um ERROR
-# custom_lint:
-#   errors:
-#     presentation_no_data: error
-
+    clean_arch_lint:
+      paths: /Users/saulogatti-pessoal/Public/DocumentosLocal/repo/flutter_arq_lint/clean_archt_lint
+      diagnostics:
+        presentation_no_data: true
+        teste_meu: true

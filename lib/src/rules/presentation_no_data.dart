@@ -1,6 +1,8 @@
-import 'package:analyzer/error/error.dart' hide LintCode;
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/error/error.dart';
 
 import '../utils/import_resolver.dart';
 
@@ -67,17 +69,25 @@ import '../utils/import_resolver.dart';
 ///   final controller = UserController(getUser); // Dependency injection
 /// }
 /// ```
-class PresentationNoData extends DartLintRule {
+class PresentationNoData extends AnalysisRule {
   static const _code = LintCode(
-    name: 'presentation_no_data',
-    problemMessage: 'Presentation should not depend directly on Data.',
-    correctionMessage:
-        'Depend only on Core (usecases/contracts) and inject implementations.',
-    errorSeverity: ErrorSeverity.WARNING,
+    'presentation_no_data',
+    'Presentation should not depend directly on Data.',
+    correctionMessage: 'Depend only on Core (usecases/contracts) and inject implementations.',
+    severity: .ERROR,
   );
 
   /// Creates an instance of the [PresentationNoData] rule.
-  const PresentationNoData() : super(code: _code);
+  PresentationNoData()
+    : super(name: 'presentation_no_data', description: 'Warns when presentation directly depends on data.');
+  @override
+  DiagnosticCode get diagnosticCode => _code;
+
+  @override
+  void registerNodeProcessors(RuleVisitorRegistry registry, RuleContext context) {
+    final visitor = _PresentationNoDataVisitor(this, context);
+    registry.addImportDirective(this, visitor);
+  }
 
   /// Runs the analysis to detect direct data dependencies in presentation.
   ///
@@ -85,47 +95,74 @@ class PresentationNoData extends DartLintRule {
   /// is in the presentation layer, resolves each import and checks if it points
   /// to the data layer. Reports a warning (or error, if configured) if
   /// violations are found.
+  // @override
+  // void run(CustomLintResolver resolver, ErrorReporter reporter, CustomLintContext context) {
+  //   context.registry.addImportDirective((node) {
+  //     final filePath = resolver.path;
+
+  //     // Checks if the file is in the presentation layer
+  //     if (!isInLayer(filePath, 'presentation')) {
+  //       return;
+  //     }
+
+  //     final uri = node.uri.stringValue;
+  //     if (uri == null) return;
+
+  //     // Ignores dart: imports and external packages
+  //     if (uri.startsWith('dart:') || (uri.startsWith('package:') && uri.contains('/presentation/'))) {
+  //       return;
+  //     }
+
+  //     // Resolves the import using utility functions
+  //     final sourceFilePath = resolver.source.uri.toFilePath();
+  //     final projectRoot = extractProjectRoot(sourceFilePath);
+  //     final packageName = extractPackageName(uri);
+
+  //     final resolved = resolveImport(node, filePath, packageName, projectRoot);
+
+  //     if (resolved == null) return;
+
+  //     // Checks if it imports from data
+  //     if (importsFromLayer(resolved.resolvedPath, 'data')) {
+  //       reporter.atNode(node, _code);
+  //     }
+  //   });
+  // }
+}
+
+class _PresentationNoDataVisitor extends SimpleAstVisitor<void> {
+  final RuleContext context;
+  final AnalysisRule rule;
+  _PresentationNoDataVisitor(this.rule, this.context);
   @override
-  void run(
-    CustomLintResolver resolver,
-    ErrorReporter reporter,
-    CustomLintContext context,
-  ) {
-    context.registry.addImportDirective((node) {
-      final filePath = resolver.path;
+  void visitImportDirective(node) {
+    final filePath = context.currentUnit?.file.path ?? '';
+    rule.reportAtNode(node);
+    // Checks if the file is in the presentation layer
+    if (!isInLayer(filePath, 'presentation')) {
+      return;
+    }
 
-      // Checks if the file is in the presentation layer
-      if (!isInLayer(filePath, 'presentation')) {
-        return;
-      }
+    final uri = node.uri.stringValue;
+    if (uri == null) return;
 
-      final uri = node.uri.stringValue;
-      if (uri == null) return;
+    // Ignores dart: imports and external packages
+    if (uri.startsWith('dart:') || (uri.startsWith('package:') && uri.contains('/presentation/'))) {
+      return;
+    }
 
-      // Ignores dart: imports and external packages
-      if (uri.startsWith('dart:') ||
-          (uri.startsWith('package:') && uri.contains('/presentation/'))) {
-        return;
-      }
+    // Resolves the import using utility functions
+    final sourceFilePath = context.definingUnit.file.shortName;
+    final projectRoot = extractProjectRoot(sourceFilePath);
+    final packageName = extractPackageName(uri);
 
-      // Resolves the import using utility functions
-      final sourceFilePath = resolver.source.uri.toFilePath();
-      final projectRoot = extractProjectRoot(sourceFilePath);
-      final packageName = extractPackageName(uri);
+    final resolved = resolveImport(node, filePath, packageName, projectRoot);
 
-      final resolved = resolveImport(
-        node,
-        filePath,
-        packageName,
-        projectRoot,
-      );
+    if (resolved == null) return;
 
-      if (resolved == null) return;
-
-      // Checks if it imports from data
-      if (importsFromLayer(resolved.resolvedPath, 'data')) {
-        reporter.atNode(node, _code);
-      }
-    });
+    // Checks if it imports from data
+    if (importsFromLayer(resolved.resolvedPath, 'data')) {
+      rule.reportAtNode(node);
+    }
   }
 }

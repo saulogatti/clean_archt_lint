@@ -40,18 +40,18 @@
 /// ```
 library;
 
-import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'dart:async';
 
-import 'src/rules/core_no_data_or_presentation.dart'
-    show CoreNoDataOrPresentation;
-import 'src/rules/core_no_flutter.dart' show CoreNoFlutter;
-import 'src/rules/data_no_presentation.dart' show DataNoPresentation;
+import 'package:analysis_server_plugin/plugin.dart';
+import 'package:analysis_server_plugin/registry.dart';
+import 'package:clean_arch_lint/src/rules/always_use_package_imports.dart';
+
 import 'src/rules/presentation_no_data.dart' show PresentationNoData;
 
-export 'src/rules/core_no_data_or_presentation.dart'
-    show CoreNoDataOrPresentation;
-export 'src/rules/core_no_flutter.dart' show CoreNoFlutter;
-export 'src/rules/data_no_presentation.dart' show DataNoPresentation;
+export 'src/rules/always_use_package_imports.dart' show AlwaysUsePackageImports;
+// export 'src/rules/core_no_data_or_presentation.dart' show CoreNoDataOrPresentation;
+// export 'src/rules/core_no_flutter.dart' show CoreNoFlutter;
+// export 'src/rules/data_no_presentation.dart' show DataNoPresentation;
 export 'src/rules/presentation_no_data.dart' show PresentationNoData;
 
 /// Creates and returns the lint plugin instance for Clean Architecture.
@@ -66,14 +66,25 @@ export 'src/rules/presentation_no_data.dart' show PresentationNoData;
 /// - [CoreNoDataOrPresentation]: Prevents core from depending on data or presentation
 /// - [DataNoPresentation]: Prevents data from depending on presentation
 /// - [PresentationNoData]: Warns when presentation directly depends on data
-PluginBase createPlugin() => _CleanArchitectureLintPlugin();
+final plugin = CleanArchitectureLintPlugin();
 
-class _CleanArchitectureLintPlugin extends PluginBase {
+class CleanArchitectureLintPlugin extends Plugin {
+  // @override
+  // List<LintRule> getLintRules(CustomLintConfigs configs) => [
+  //       const CoreNoFlutter(),
+  //       const CoreNoDataOrPresentation(),
+  //       const DataNoPresentation(),
+  //       const PresentationNoData(),
+  //     ];
+
   @override
-  List<LintRule> getLintRules(CustomLintConfigs configs) => [
-        const CoreNoFlutter(),
-        const CoreNoDataOrPresentation(),
-        const DataNoPresentation(),
-        const PresentationNoData(),
-      ];
+  String get name => "Flutter Clean Architecture Lint Plugin";
+
+  @override
+  FutureOr<void> register(PluginRegistry registry) {
+    registry.registerLintRule(PresentationNoData());
+    registry.registerLintRule(AlwaysUsePackageImports());
+    registry.registerWarningRule(AlwaysUsePackageImports());
+    registry.registerWarningRule(PresentationNoData());
+  }
 }

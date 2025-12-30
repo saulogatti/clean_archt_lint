@@ -23,9 +23,4 @@ void main() async {
 
   // Loads the user
   await userPage.loadUser('1');
-
-  print('\n✅ Clean architecture implemented correctly!');
-  print('📦 Core: defines contracts');
-  print('🔧 Data: implements contracts');
-  print('🎨 Presentation: consumes contracts via DI');
 }
